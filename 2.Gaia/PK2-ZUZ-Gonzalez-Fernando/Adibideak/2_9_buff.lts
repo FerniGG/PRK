@@ -1,0 +1,3 @@
+const N=3
+range R=0..N
+BUFF = (in[i:R]->out[i]-> BUFF).

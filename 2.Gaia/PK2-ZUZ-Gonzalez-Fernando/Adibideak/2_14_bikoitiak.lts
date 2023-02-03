@@ -1,0 +1,5 @@
+set T = {[0],[2],[4],[6],[8]}
+BIKOITIAK = BIKOITIAK[0],
+BIKOITIAK[i:T] =
+if (i<8) then ( [i] -> BIKOITIAK[i+2] )
+else ( [i] -> STOP ) .

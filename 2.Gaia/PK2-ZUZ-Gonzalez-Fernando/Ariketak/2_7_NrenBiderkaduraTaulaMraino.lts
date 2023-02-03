@@ -1,0 +1,4 @@
+const N = 2
+const M =10
+range T = 0..M*N
+NKOBIDERKADURATAULA = (in[a:T]-> out[N*a]-> NKOBIDERKADURATAULA).

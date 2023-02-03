@@ -1,0 +1,4 @@
+LEONKASTILLO = (bota->LEON
+ |bota->KASTILLO),
+LEON = (leon->LEONKASTILLO),
+KASTILLO = (kastillo->LEONKASTILLO).

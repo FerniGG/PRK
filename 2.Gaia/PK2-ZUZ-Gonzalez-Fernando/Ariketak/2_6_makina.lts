@@ -1,0 +1,9 @@
+set T = {[0],[5],[10],[15],[20],[25],[30]}
+set M={[5],[10],[20]}
+set C={[5],[10]}
+FRESKAGARRIA =( diruaSartu -> FRESKAGARRIA[0]),
+FRESKAGARRIA[v:T] = (when (v<15) [i:M] ->FRESKAGARRIA[v+i]
+					|when (v==15) freskagarria->bueltak[0] ->FRESKAGARRIA
+					|when (v>15) freskagarria ->BUELTAK[v-15]),
+BUELTAK[j:T]= (when (j==5) bueltak[5] -> FRESKAGARRIA
+				|when (j>=10) bueltak[i:C] ->BUELTAK[j-i]).

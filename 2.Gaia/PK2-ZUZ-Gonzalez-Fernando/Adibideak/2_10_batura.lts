@@ -1,0 +1,1 @@
+BATURA = (in[a:T][b:T]-> out[a+b]-> BATURA).
