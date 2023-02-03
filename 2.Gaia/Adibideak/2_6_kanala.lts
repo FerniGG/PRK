@@ -1,0 +1,3 @@
+KANALA = (in->KANALA
+ |in->out->KANALA
+ ).

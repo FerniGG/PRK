@@ -1,0 +1,4 @@
+const N = 1
+range T = 0..N
+range R = 0..2*N
+BATURA = (in[a:T][b:T]-> out[a+b]-> BATURA).
