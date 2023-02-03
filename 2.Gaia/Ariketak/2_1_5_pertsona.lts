@@ -1,0 +1,3 @@
+PERTSONA = (asteguna->egon->lanegin->PERTSONA
+		| asteburua->egon->EJ),
+EJ=({erosi,jolastu}->PERTSONA).

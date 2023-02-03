@@ -1,0 +1,7 @@
+const N = 3
+range T = 0..N
+MAX = (in[a:T][b:T][c:T]->
+			 ( when (a>=b &&a>=c) max[a] -> MAX
+			| when (b>=a &&b>=c) max[b] -> MAX
+			| when (c>=b &&c>=a) max[c] -> MAX)
+).

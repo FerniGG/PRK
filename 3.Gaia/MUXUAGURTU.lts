@@ -1,0 +1,3 @@
+MUXU = (muxukatu->STOP).
+AGURTU = (pentsatu->hitzegin->STOP).
+||AGURTU_MUXU = (MUXU || AGURTU).

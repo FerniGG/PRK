@@ -1,0 +1,8 @@
+const N=6
+range R=0..N
+URTEGIA = URTEGIA[4],
+URTEGIA[i:R]=(	when (i<3) gutxi[i]->IGOJAITSI[i]
+				| when (i>=3 && i<=5) ondo[i]->IGOJAITSI[i]
+				| when (i==6) asko[i] ->IGOJAITSI[i]),
+IGOJAITSI[j:R]=(	when (j<6) igo -> URTEGIA[j+1]
+				| when (j>0) jaitsi ->URTEGIA[j-1]).

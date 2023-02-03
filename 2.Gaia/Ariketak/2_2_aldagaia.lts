@@ -1,0 +1,8 @@
+const N = 3
+range R = 1..N
+IRAKURRI = (irakurri[x:R] -> IDATZI[x]),
+IDATZI=IDATZI [N],
+IDATZI[i:R]= ( when (i>1) idatzi[i] -> IDATZI[i-1]
+			| when (i==1) idatzi[i] -> IRAKURRI
+ ).
+

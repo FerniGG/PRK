@@ -1,0 +1,8 @@
+range Bool = 0..1
+EGIL3 = (egin->EGIL3).
+ERAB3 = (erabili->ERAB3).
+SINK = SINK [0],
+SINK[i:Bool] = ( when (i==0) egin -> SINK[1]
+| when (i==1) erabili -> SINK[0]
+ ).
+||EGIL_ERAB3 = (EGIL3 || ERAB3 || SINK).

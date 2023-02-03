@@ -1,0 +1,5 @@
+const N=3
+range R=1..N
+ETENGAILU = (on->off->ETENGAILU).
+||ETENGAILUAK = (forall[i:R]
+ e[i]:ETENGAILU).

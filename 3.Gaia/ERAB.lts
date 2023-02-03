@@ -1,0 +1,3 @@
+EGIL = (egin->prest->EGIL).
+ERAB = (prest->erabili->ERAB).
+||EGIL_ERAB=(EGIL || ERAB).

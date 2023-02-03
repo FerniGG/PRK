@@ -1,0 +1,3 @@
+MUGITU = (aurrera->ALDERA),
+ALDERA=(eskubira->MUGITU
+		|ezkerrera->STOP).

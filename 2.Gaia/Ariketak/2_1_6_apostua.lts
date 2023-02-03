@@ -1,0 +1,4 @@
+set T = {bat,bi,hiru}
+APOSTUA = (bat -> irabazi ->APOSTUA
+| bi -> irabazi ->APOSTUA
+| hiru -> galdu ->APOSTUA).

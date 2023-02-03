@@ -1,0 +1,3 @@
+ETENGAILU = (on->off->ETENGAILU).
+||BI_ETENGAILU = ( a:ETENGAILU
+ || b:ETENGAILU).
