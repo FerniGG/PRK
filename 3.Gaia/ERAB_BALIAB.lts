@@ -5,3 +5,8 @@ BALIAB[i:Bool] = (when (i==0) eskuratu -> BALIAB[1]
  | when (i==1) askatu -> BALIAB[0]
  ).
 ||ERAB_BALIAB = ( {a,b}:ERAB || {a,b}::BALIAB).
+
+
+
+
+
