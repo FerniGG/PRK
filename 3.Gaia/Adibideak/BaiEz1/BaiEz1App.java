@@ -6,7 +6,7 @@ public class BaiEz1App{
 		 bai.start();
 		 ez.start();
 		  }
-		 }
+		}
 		 
 		 class BaiIdazlea extends Thread {
 			public void run(){

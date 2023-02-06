@@ -1,4 +1,4 @@
-public class G3_A5_BaiEzAgianBetiApp{
+public class BaiEzAgianApp{
 	public static void main (String args[]) {
 		//imagina no repasar el  codigo y no ver esta mierda
 		Pantaila p = new Pantaila();
