@@ -20,14 +20,13 @@ public class G3_A8_KotxeaIdazlea extends Thread{
 				pos=pos+1;
 			
 			 if(this.kotxea.compareTo("*")==0) {
-				 this.denbora=this.denbora/2;
+				 this.denbora=this.denbora/1.3;
 			 }
 			 else {
-				 this.denbora=this.denbora*2;
+				 this.denbora=this.denbora*1.1;
 			 }
-			 p.margotu(this.kotxea+"finished");
 			 }
-			
+			p.margotu(this.kotxea+"finished");
 			}catch (InterruptedException e) {}
 			}
 	
