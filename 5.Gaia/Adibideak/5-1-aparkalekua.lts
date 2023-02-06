@@ -1,0 +1,13 @@
+const Plazak = 4
+range R = 0..Plazak
+SARRERAK = (sartu->SARRERAK).
+IRTEERAK = (irten->IRTEERAK).
+KONTROLATZAILEA = KONTROL[0],
+KONTROL[kop:R] =( when(kop<Plazak) sartu->KONTROL[kop+1]
+                 | when(kop>0) irten->KONTROL[kop-1]
+                 | [kop]->KONTROL[kop]
+).
+
+||APARKALEKUA =(SARRERAK||
+                KONTROLATZAILEA||
+                IRTEERAK).
