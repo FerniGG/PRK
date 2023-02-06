@@ -5,7 +5,5 @@ public class BaiEz1App{
 		 EzIdazlea ez = new EzIdazlea();
 		 bai.start();
 		 ez.start();
-
-		 
 		  }
 		 }
