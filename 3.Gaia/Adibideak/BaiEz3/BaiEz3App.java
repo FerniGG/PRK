@@ -1,19 +1,19 @@
 public class BaiEz3App{
     public static void main (String args[]) {
-    Idazlea bai = new Idazlea("bai",1000,4);
-    Idazlea ez = new Idazlea("\tez",400,20);
+    Idazlea3 bai = new Idazlea3("bai",1000,4);
+    Idazlea3 ez = new Idazlea3("\tez",400,20);
     bai.start();
     ez.start();
     }
     }
-class Idazlea extends Thread {
+class Idazlea3 extends Thread {
     private String baiEz;
     private int denbora, kopurua;
     
-    public Idazlea(String s, int i, int j){
+    public Idazlea3(String s, int i, int j){
         baiEz=s;
         denbora=i;
-    kopurua=j;
+        kopurua=j;
     }
     
     public void run() {
