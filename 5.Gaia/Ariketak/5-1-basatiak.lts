@@ -3,11 +3,11 @@ const LM = 3
 range LER=0..LM
 range BR = 1..BK
 BASATIA = (hartu->jan->lo->BASATIA).
-SUKALDARIA = (bete->SUKALDARIA).
-KONTROLATZAILEA = LAPIKO[LM],
-LAPIKO[kop:LER] =( when(kop<=LM) 	hartu->KONTROL[kop-1]
- 				 | when(kop==0) 	bete->KONTROL[LM]
- 				 |  				[kop]->KONTROL[kop]
+SUKALDARIA = (s.bete->LAPIKO).
+LAPIKO = LAPIKO[0],
+LAPIKO[kop:LER] =( when(kop<=LM) 	b[BR].hartu->LAPIKO[kop-1]
+ 				 | when(kop==0) 	s.bete->LAPIKO[LM]
+ 				 |  				[kop]->LAPIKO[kop]
 ).
 ||FESTA =
-(b[BR]:BASATIA||KONTROLATZAILEA||s:SUKALDARIA).
+(b[BR]:BASATIA||LAPIKO||s:SUKALDARIA).
