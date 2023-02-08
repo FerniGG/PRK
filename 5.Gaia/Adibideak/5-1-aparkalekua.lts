@@ -7,7 +7,6 @@ KONTROL[kop:R] =( when(kop<Plazak) sartu->KONTROL[kop+1]
                  | when(kop>0) irten->KONTROL[kop-1]
                  | [kop]->KONTROL[kop]
 ).
-
 ||APARKALEKUA =(SARRERAK||
                 KONTROLATZAILEA||
                 IRTEERAK).
