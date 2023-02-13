@@ -1,0 +1,14 @@
+const PK = 3 // Puska kopuru maximoa
+range PR = 0..PK // Lapikoan egon daitekeen puska kopuruaren rangoa
+range SPR = 1..PK // Sukaldariak bota dezakeen puska kopuruaren rangoa
+const BK = 2 // Basati kopurua
+range BR = 1..BK // Basatien rangoa
+BASATIA = ( random[r:PK] -> hartu[r] -> jan -> lo -> BASATIA ).
+SUKALDARIA = ( random[r:SPR] -> bota[r] -> SUKALDARIA ).
+// i: lapikoan dagoen puska kopurua
+LAPIKOA = LAPIKOA[0],
+LAPIKOA[i:PR] = ( when (i<PK) begiratu[i]->s.bota[b:1..PK-i] -> LAPIKOA[i+b]
+| when (i>0) begiratu[i]->b[BR].hartu[b:1..PK-i] -> LAPIKOA[i-b]
+| [i] -> LAPIKOA[i]
+).
+||JANARIA = ( b[BR]:BASATIA || s:SUKALDARIA || LAPIKOA ).
