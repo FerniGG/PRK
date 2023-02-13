@@ -1,11 +1,11 @@
 const BK = 3
 const LM = 3
-range LER=0..LM
+range LR=0..LM
 range BR = 1..BK
 BASATIA = (hartu->jan->lo->BASATIA).
-SUKALDARIA = (s.bete->LAPIKO).
+SUKALDARIA = (bete->SUKALDARIA).
 LAPIKO = LAPIKO[0],
-LAPIKO[kop:LER] =( when(kop<=LM) 	b[BR].hartu->LAPIKO[kop-1]
+LAPIKO[kop:LR] =( when(kop<=LM) 	b[BR].hartu->LAPIKO[kop-1]
  				 | when(kop==0) 	s.bete->LAPIKO[LM]
  				 |  				[kop]->LAPIKO[kop]
 ).
