@@ -1,8 +1,8 @@
 public class BaiEzAppAbiaduraApp{
 	public static void main (String args[]) {
 		Pantaila p = new Pantaila();
-		Idazlea bai = new Idazlea("bai",500,25,p);
-		Idazlea ez = new Idazlea("\tez",500,10,p);
+		Idazlea bai = new Idazlea("bai",1000,30,p);
+		Idazlea ez = new Idazlea("\tez",200,13,p);
 		bai.start();
 		ez.start();
 		}

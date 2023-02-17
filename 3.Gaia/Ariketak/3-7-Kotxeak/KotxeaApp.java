@@ -2,8 +2,8 @@
 public class KotxeaApp {
 	public static void main (String args[]) {
 		G3_A7_Pantaila p = new G3_A7_Pantaila();
-		G3_A7_KotxeaIdazlea G3_A7_k1 = new G3_A7_KotxeaIdazlea("*",450,10,p);
-		G3_A7_KotxeaIdazlea G3_A7_k2 = new G3_A7_KotxeaIdazlea("+",200,40,p);
+		G3_A7_KotxeaIdazlea G3_A7_k1 = new G3_A7_KotxeaIdazlea("*",400,57,p);
+		G3_A7_KotxeaIdazlea G3_A7_k2 = new G3_A7_KotxeaIdazlea("+",200,56,p);
 		p.sartuKotxeak(G3_A7_k1, G3_A7_k2);
 		G3_A7_k1.start();
 		G3_A7_k2.start();
@@ -71,23 +71,27 @@ class G3_A7_Pantaila {
 		}
 	public void garbitu() {
 		for(int i=0; i<24; i++){System.out.println();}
-	}
+	} 
+	
 	public void margotu() {
+		this.garbitu();
 		String k_1="";
 		String k_2="";
 		for (int i=0;i<k1.getPos();i++) {
-			k_1+="|";
+			k_1+=" ";
 		}
 		for (int j=0;j<k2.getPos();j++) {
-			k_2+="|";
+			k_2+=" ";
 		}
 		k_1+=k1.getKotxea();
 		k_2+=k2.getKotxea();
 		
+		System.out.println("--------------------------------------------------------|");
+		
 		System.out.println(k_1);
 		System.out.println(k_2);
 		
-		System.out.println("--------------------------------------------------------");
+		System.out.println("--------------------------------------------------------|");
 	}
 		}
 

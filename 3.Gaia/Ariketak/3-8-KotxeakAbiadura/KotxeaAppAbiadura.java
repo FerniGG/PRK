@@ -2,8 +2,8 @@
 public class KotxeaAppAbiadura {
 	public static void main (String args[]) {
 		G3_A8_Pantaila p = new G3_A8_Pantaila();
-		G3_A8_KotxeaIdazlea G3_A8_k1 = new G3_A8_KotxeaIdazlea("*",2000,30,p);
-		G3_A8_KotxeaIdazlea G3_A8_k2 = new G3_A8_KotxeaIdazlea("+",500,10,p);
+		G3_A8_KotxeaIdazlea G3_A8_k1 = new G3_A8_KotxeaIdazlea("*",1500,56,p);
+		G3_A8_KotxeaIdazlea G3_A8_k2 = new G3_A8_KotxeaIdazlea("+",50,57,p);
 		p.sartuKotxeak(G3_A8_k1, G3_A8_k2);
 		G3_A8_k1.start();
 		G3_A8_k2.start();
@@ -30,10 +30,10 @@ class G3_A8_KotxeaIdazlea extends Thread{
 				pos=pos+1;
 			
 			 if(this.kotxea.compareTo("*")==0) {
-				 this.denbora=this.denbora/1.3;
+				 this.denbora=this.denbora/1.2;
 			 }
 			 else {
-				 this.denbora=this.denbora*1.1;
+				 this.denbora=this.denbora*1.05;
 			 }
 			 }
 			p.margotu(this.kotxea+"finished");
@@ -77,16 +77,19 @@ class G3_A8_Pantaila {
 		for(int i=0; i<24; i++){System.out.println();}
 	}
 	public void margotu() {
+		this.garbitu();
 		String k_1="";
 		String k_2="";
 		for (int i=0;i<k1.getPos();i++) {
-			k_1+="|";
+			k_1+=" ";
 		}
 		for (int j=0;j<k2.getPos();j++) {
-			k_2+="|";
+			k_2+=" ";
 		}
 		k_1+=k1.getKotxea();
 		k_2+=k2.getKotxea();
+		
+		System.out.println("--------------------------------------------------------");
 		
 		System.out.println(k_1);
 		System.out.println(k_2);

@@ -12,15 +12,15 @@ import java.awt.event.ActionEvent;
 import javax.swing.JFrame;
 
  
-public class KotxeAnimatuak  {
+public class KotxeaAbiaduraIrudiekinApp  {
 	
 	public static void main (String args[]) {
 	
 		Framea framea = new Framea();
 		framea.setVisible(true);
 		
-		Kotxea k1 = new Kotxea(1, 70, framea);
-		Kotxea k2 = new Kotxea(2, 50, framea);
+		Kotxea k1 = new Kotxea(1, 10, framea);
+		Kotxea k2 = new Kotxea(2, 75, framea);
 						
 		k1.start();
 		k2.start();
@@ -45,12 +45,14 @@ class Kotxea extends Thread {
 		for (int x=0;x<540;x++) {
 			framea.panela.setX(kotxea,x);
 			if(kotxea==1){
-				abiadura*=1.2;
+				abiadura*=1.005;
 			}else{
-				abiadura/=1.2;
+				abiadura/=1.005;
+				if (abiadura<5) {
+					abiadura=5;
+				}
 			}
-			denbora=(int)(1000/abiadura);
-			try {sleep(denbora);}
+			try {sleep(abiadura);}
 			catch (InterruptedException e) {}
 		}
 		System.out.println(" Bukatuta ("+kotxea+")");
