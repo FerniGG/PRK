@@ -5,15 +5,17 @@ const BK = 2 // Basati kopurua
 range BR = 1..BK // Basatien rangoa
 range BLOKR= 0..1
 BASATIA = ( begiratu[p:PR]-> 	
-							if(p>0) then (random[r:1..p]->hartu[r]->jan->lo->BASATIA)).
+							if(p>=0) then (random[r:1..p]->hartu[r]->jan->lo->BASATIA)
+							else(askatu->BASATIA)).
 SUKALDARIA = ( begiratu[p:PR]-> 	
-							if(0<PK-p) then (random[r:1..PK-p]->bota[r]->SUKALDARIA)).
+							if(0<=PK-p) then (random[r:1..PK-p]->bota[r]->SUKALDARIA)
+							else(askatu->SUKALDARIA)).
 //Lapikoa[puska kop][blokeoaren balioa 1 baldin blokeoa aktibatuta 0 bestela]
 LAPIKOA = LAPIKOA[0][0],
 LAPIKOA[i:PR][blok:BLOKR] = ( when (i<PK||blok==0) s.begiratu[i] -> LAPIKOA[i][1]
 | when (i>0||blok==0) b[BR].begiratu[i]-> LAPIKOA[i][1]
-| when (i<PK||blok==1) s.bota[p:1..PK-i] -> LAPIKOA[i+p][0]
-| when (i>0||blok==1) b[BR].hartu[p:1..PK-i] -> LAPIKOA[i-p][0]
+| when (i<PK) s.bota[p:1..PK-i] -> LAPIKOA[i+p][0]
+| when (i>0) b[BR].hartu[p:1..PK-i] -> LAPIKOA[i-p][0]
 | [i] -> LAPIKOA[i]
 ).
 ||JANARIA = ( b[BR]:BASATIA || s:SUKALDARIA || LAPIKOA ).
