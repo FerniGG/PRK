@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class BasatiakApp {
 	public final static int Misiolari_puska_Max = 3;
-	public final static int Basati_kop = 3;
+	public final static int Basati_kop = 4;
 
 	public static void main(String args[]) {
 		Pantaila pant = new Pantaila(Misiolari_puska_Max, Basati_kop);
@@ -16,6 +16,7 @@ public class BasatiakApp {
 		}
 		Sukaldaria s = new Sukaldaria(k, pant);
 		s.start();
+		//pant.margotuLapikoa(Misiolari_puska_Max, Basati_kop);
 
 	}
 
@@ -38,12 +39,11 @@ class Basatiak extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
-
+//BASATIA = (hartu->jan->lo->BASATIA).
 	public void run() {
 		int rand = 0;
-		int kont=0;
 		try {
-			while (kont!=3) {
+			while (true) {
 				kontrol.LapikotikHartu(this.basatiaid);
 				rand = getRandomNumberInRange(1, 30);
 				sleep(rand * 100);
@@ -53,15 +53,14 @@ class Basatiak extends Thread {
 				p.lo(this.basatiaid);
 				rand = getRandomNumberInRange(1, 30);
 				sleep(rand * 100);
-				kont++;
 
 			}
-			System.out.println("b["+this.basatiaid+"] BUKATUTA.");
 		} catch (InterruptedException e) {
 		}
 	}
 }
 
+//SUKALDARIA = (bete->SUKALDARIA).
 class Sukaldaria extends Thread {
 	Kontrolatzailea kontrol;
 	Pantaila p;
@@ -102,15 +101,15 @@ class Kontrolatzailea {
 		pantaila = pant;
 		unekop = misiolariPuskakMax;
 	}
-
+//when(kop==0) 	s.bete->LAPIKO[LM]
 	synchronized void LapikoaBete() throws InterruptedException {
 		while (!(unekop == 0))
 			wait();
 		unekop = misiolariPuskakMax;
 		pantaila.bete();
-		notify();
+		notifyAll();
 	}
-
+//when(kop>0) 	b[BR].hartu->LAPIKO[kop-1]
 	synchronized void LapikotikHartu(int id) throws InterruptedException {
 		while (!(unekop > 0))
 			wait();
@@ -133,10 +132,10 @@ class Pantaila {
 		basatiKop = pbasatikop;
 		System.out.print("suk");
 		for (int i = 0; i < basatiKop; i++) {
-			System.out.print("\tb[" + i + "]");
+			System.out.print("\t\tb[" + i + "]");
 		}
-		System.out.print("\tLapikoa\n");
-		System.out.println("=======================================");
+		System.out.print("\t\tLapikoa\n");
+		System.out.println("===========================================================================");
 		this.bete();
 	}
 
@@ -149,7 +148,7 @@ class Pantaila {
 		int kop = k;
 
 		for (int i = basatiKop - basatiaid - 1; i < this.basatiKop; i++) {
-			System.out.print("\t");
+			System.out.print("\t\t");
 		}
 		System.out.print("hartu");
 		margotuLapikoa(kop, basatiaid);
@@ -157,7 +156,7 @@ class Pantaila {
 
 	synchronized public void jan(int basatiaid) {
 		for (int i = basatiKop - basatiaid - 1; i < this.basatiKop; i++) {
-			System.out.print("\t");
+			System.out.print("\t\t");
 		}
 		System.out.print("jan\n");
 
@@ -165,15 +164,19 @@ class Pantaila {
 
 	synchronized public void lo(int basatiaid) {
 		for (int i = basatiKop - basatiaid - 1; i < this.basatiKop; i++) {
-			System.out.print("\t");
+			System.out.print("\t\t");
 		}
 		System.out.print("lo\n");
+
+	}
+	synchronized public void margotu(String Message) {
+		System.out.print(Message);
 
 	}
 
 	synchronized public void margotuLapikoa(int k, int basatiaid) {
 		for (int i = basatiKop - basatiaid; 0 < i; i--) {
-			System.out.print("\t");
+			System.out.print("\t\t");
 		}
 		System.out.print("[");
 		for (int i = 0; i < k; ++i) {

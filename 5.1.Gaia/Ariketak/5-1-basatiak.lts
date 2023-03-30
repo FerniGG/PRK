@@ -1,3 +1,18 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 24/02/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 5.1
+//   Ariketa Zenb : 1                          
+//   Ariketa Izena : BasatienFesta  
+//   Enuntziatua : Basati bakoitzak lapiko batetik misiolari-puska bat
+//                 hartzen du; puska hori jaten du eta lotara doa;
+//                 ondoren beste bat hartzen du...
+//                 
+//                 Basati sukaldariak, lapikoa hutsik dagoenean,
+//                 lapikoa betetzen du misiolari-puskekin         
+
 const BK = 3
 const LM = 3
 range LR=0..LM
@@ -5,7 +20,7 @@ range BR = 1..BK
 BASATIA = (hartu->jan->lo->BASATIA).
 SUKALDARIA = (bete->SUKALDARIA).
 LAPIKO = LAPIKO[0],
-LAPIKO[kop:LR] =( when(kop<=LM) 	b[BR].hartu->LAPIKO[kop-1]
+LAPIKO[kop:LR] =( when(kop>0) 	b[BR].hartu->LAPIKO[kop-1]
  				 | when(kop==0) 	s.bete->LAPIKO[LM]
  				 |  				[kop]->LAPIKO[kop]
 ).

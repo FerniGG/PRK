@@ -1,3 +1,16 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 24/02/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 5.1
+//   Ariketa Zenb : 3                          
+//   Ariketa Izena : BasatienFestaBotaAusaz 
+//   Enuntziatua : Basatien festa, baina orain:
+//                 - sukaldariak hainbat puska bota, eta
+//                 - basatiek hainbat puska hartu, eta
+//                 - bota edo hartu aurretik,lapikoan zenbat dagoen begiratzen dute
+
 const PK = 5 // Puska kopuru maximoa
 range PR = 0..PK // Lapikoan egon daitekeen puska kopuruaren rangoa
 range SPR = 1..PK // Sukaldariak bota dezakeen puska kopuruaren rangoa
@@ -12,13 +25,11 @@ SUKALDARIA = ( begiratu[p:PR]->
 							else(askatu->SUKALDARIA)).
 //Lapikoa[puska kop][blokeoaren balioa 1 baldin blokeoa aktibatuta 0 bestela]
 LAPIKOA = LAPIKOA[0][0],
-LAPIKOA[i:PR][blok:BLOKR] = ( when (i<PK||blok==0) s.begiratu[i] -> LAPIKOA[i][1]
-| when (i>0||blok==0) b[BR].begiratu[i]-> LAPIKOA[i][1]
-| when (i<PK) s.bota[p:1..PK-i] -> LAPIKOA[i+p][0]
-| when (i>0) b[BR].hartu[p:1..i] -> LAPIKOA[i-p][0]
-| [i] -> LAPIKOA[i]
-| b[BR].askatu-> LAPIKOA[i][0]
-| s.askatu-> LAPIKOA[i][0]
+LAPIKOA [i:PR][blok:BLOKR] =( when (blok==0)	s.begiratu[i] 		-> LAPIKOA[i][1] | b[BR].begiratu[i] 	-> LAPIKOA[i][1]
+				 			| when (i>0 && blok==1) 	b[BR].hartu[p:1..i] -> LAPIKOA[i-p][0]
+							| when (i<PK && blok==1)	s.bota[b:1..PK-i] 	-> LAPIKOA[i+b][0]
+							| when  (blok==1) s.askatu		-> LAPIKOA[i][0]
+							| when  (blok==1) b[BR].askatu -> LAPIKOA[i][0]
 ).
 ||JANARIA = ( b[BR]:BASATIA || s:SUKALDARIA || LAPIKOA ).
 

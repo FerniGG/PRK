@@ -1,9 +1,0 @@
-const N = 5
-range R =0..N
-IDAZLEA = (put->IDAZLEA).
-IRAKURLEA = (get->IRAKURLEA).
-BUFFER = BUFFER[0],
-BUFFER[i:R] = ( when (i<N) put[i]->BUFFER[i+1]
- | when (i>0) get[i]->BUFFER[i-1]
- ).
-||BUFFERMUGATUA = (IDAZLEA || IRAKURLEA || BUFFER).

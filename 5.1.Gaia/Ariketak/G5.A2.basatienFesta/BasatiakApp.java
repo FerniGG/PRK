@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class BasatiakApp {
-	public final static int Misiolari_puska_Max = 6;
+	public final static int Misiolari_puska_Max = 5;
 	public final static int Basati_kop = 3;
 	public final static int zenbatBota = 3;
 
@@ -40,19 +40,19 @@ class Basatiak extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
-
+//BASATIA = (hartu->jan->lo->BASATIA).
 	public void run() {
 		int rand = 0;
 		try {
 			while (true) {
 				kontrol.LapikotikHartu(this.basatiaid);
-				rand = getRandomNumberInRange(1, 30);
+				rand = getRandomNumberInRange(1, 15);
 				sleep(rand * 100);
 				p.jan(this.basatiaid);
-				rand = getRandomNumberInRange(1, 30);
+				rand = getRandomNumberInRange(1, 15);
 				sleep(rand * 100);
 				p.lo(this.basatiaid);
-				rand = getRandomNumberInRange(1, 30);
+				rand = getRandomNumberInRange(1, 15);
 				sleep(rand * 100);
 
 			}
@@ -78,14 +78,14 @@ class Sukaldaria extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
-
+//SUKALDARIA = (bota[BT]->SUKALDARIA).
 	public void run() {
 		int rand = 1;
 		try {
 			while (true) {
 				kontrol.LapikoaBete(zenbatbota);
-				rand = getRandomNumberInRange(0, 20);
-				sleep(rand * 500);
+				rand = getRandomNumberInRange(1, 10);
+				sleep(rand * 100);
 
 			}
 		} catch (InterruptedException e) {
@@ -101,20 +101,18 @@ class Kontrolatzailea {
 	Kontrolatzailea(int pusk, Pantaila pant) {
 		misiolariPuskakMax = pusk;
 		pantaila = pant;
-		unekop = misiolariPuskakMax;
+		unekop = 0;
 	}
-
+//  when(BT<=LM-kop) 	s.bota[BT]->LAPIKO[kop+BT]
 	synchronized void LapikoaBete(int zenbat) throws InterruptedException {
 		int lekulibre=this.misiolariPuskakMax-unekop;
-		// HUTSIK BADAGO//while (!(unekop == 0))
-		/* HUTSIK EZ BADAGO ETA LEKUA BADAGO */
 		while (!(unekop+zenbat<=this.misiolariPuskakMax))
 			wait();
 		unekop += zenbat;
 		pantaila.bota(this.unekop,zenbat);
 		notify();
 	}
-
+//when(kop>0) 	b[BR].hartu->LAPIKO[kop-1]
 	synchronized void LapikotikHartu(int id) throws InterruptedException {
 		while (!(unekop > 0))
 			wait();
@@ -141,7 +139,6 @@ class Pantaila {
 		}
 		System.out.print("\tLapikoa\n");
 		System.out.println("=======================================");
-		this.bota(0,zenbat);
 	}
 
 	synchronized public void bota(int unekop,int zenbat) {

@@ -1,3 +1,16 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 24/02/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 5.1
+//   Ariketa Zenb : 2                          
+//   Ariketa Izena : BasatienFestaBota3  
+//   Enuntziatua : Basatien festa, baina orain sukaldariak
+//                 aldi bakoitzean 3 puska botatzen ditu
+//                 (eta lapikoan 3 puska baino gehiago sartzen dira; adib. 5).
+
+
 const BK = 3
 const LM = 5
 const BT=3
@@ -6,7 +19,7 @@ range BR = 1..BK
 BASATIA = (hartu->jan->lo->BASATIA).
 SUKALDARIA = (bota[BT]->SUKALDARIA).
 LAPIKO = LAPIKO[0],
-LAPIKO[kop:LR] =( when(kop<=LM) 	b[BR].hartu->LAPIKO[kop-1]
+LAPIKO[kop:LR] =( when(kop>0) 	b[BR].hartu->LAPIKO[kop-1]
  				 | when(BT<=LM-kop) 	s.bota[BT]->LAPIKO[kop+BT]
  				 |  				[kop]->LAPIKO[kop]
 ).
