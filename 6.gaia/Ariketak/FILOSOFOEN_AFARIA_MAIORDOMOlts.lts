@@ -1,0 +1,33 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 1/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 6
+//   Ariketa Zenb : 2                        
+//   Ariketa Izena : FilosofoenAfariaMaiordomoa 
+//   Enuntziatua : . Filosofoen afarirako beste soluzio bat:
+//			bost filosofoetatik soilik lau filosofo eser daitezke batera.
+//			MAIORDOMO prozesu bat espezifikatu, proposatutako ereduarekin 
+//			konposatzean, gehienez lau filosofo eseri ekintza egitea baimentzen 
+//			duena, altxatu ekintza bat gertatu aurretik. Ziurtatu ez dela elkar-
+//      		blokeaketarik ematen.
+
+//			Trazan erakutsi behar da zenbat filosofo dauden eserita 
+//			(izartxoekin adierazi)
+const N=5
+range R=0..N-1
+
+
+SARD = SARD[0],
+SARD[h:0..1] = (when (h==0) get->SARD[1]
+ 							| put->SARD[0]).
+FIL = (eseri->eskubi.get->ezker.get ->JAN),
+JAN = (jan->ezker.put->eskubi.put->altxatu->FIL).
+
+MAIOR=MAIOR[0],
+MAIOR[i:R]=(when (i<N-1) eseri->MAIOR[i+1]
+ 			|  altxatu->MAIOR[i-1]
+			).
+
+||AFARIA=  ( forall [i:R] ( fil[i]:FIL ||{fil[i].ezker,fil[((i-1)+N)%N].eskubi}::SARD)||fil[i:R]::MAIOR).

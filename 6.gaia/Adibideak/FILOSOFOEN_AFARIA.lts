@@ -1,0 +1,14 @@
+
+const N=5
+range R=0..N-1
+
+FIL = (eseri -> eskubi.get-> ezker.get->
+jan -> eskubi.put-> ezker.put->
+altxatu-> FIL).
+SARD = SARD[0],
+SARD[h:0..1] = (when (h==0) get->SARD[1]
+ 							| put->SARD[0]).
+||AFARIA = forall [i:R]
+(fil[i]:FIL ||
+{fil[i].ezker,fil[((i-1)+N)%N].eskubi}::SARD
+).

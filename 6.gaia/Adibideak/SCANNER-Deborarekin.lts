@@ -1,0 +1,18 @@
+P = (printer.get->GETSCANNER),
+GETSCANNER = (scanner.get->kopiatu
+->printer.put->scanner.put->P
+ |denboramuga->printer.put->P
+ ).
+Q = (scanner.get->GETPRINTER),
+GETPRINTER = (printer.get->kopiatu
+->printer.put->scanner.put->Q
+ |denboramuga->scanner.put->Q
+ ).
+BALIABIDE = BALIABIDE[0],
+BALIABIDE[h:0..1] =
+ (when (h==0) get->BALIABIDE[1]
+ |when (h==1) put->BALIABIDE[0]).
+||SISTEMA = (p:P||q:Q
+||{p,q}::printer:BALIABIDE
+||{p,q}::scanner:BALIABIDE
+ ).

@@ -1,0 +1,31 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 2/04/2023                        ///
+//////////////////////////////////////////////////
+
+//Gai Zenb : 6
+//Ariketa Zenb : 5                        
+//Ariketa Izena : AsmatutakoProblemaBlokeoaGabe
+//Enuntziatua : Bidegurutze bat daukagun non kotxea gurutzera heltzen da.
+//				Gelditu baino lehen udaltzain bat esango dio sartu daitekeen edo ez
+//				sartzerakoan helmuga bidea aukeratuko du(unekoa ezin da izan).
+//				Bide hori libre badago martzan jarriko da. eta Uneko bidea libratuko du.
+// 				Bidegurutzera heltzerakoan helmuga bidea aukeratuko du berriro.
+const N=4
+range R=0..N-1
+
+
+BIDEA = BIDEA[0],
+BIDEA[h:0..1] = (when (h==0) get->BIDEA[1]
+ 							| put->BIDEA[0]).
+KOTXEA = (gelditu->helmBidAukeratu[helmuga:R]->unekoa.get ->begiratu->helmuga.get->MARTXAN),
+MARTXAN = (martxan->unekoa.put->helmuga.put->atera->KOTXEA).
+
+UDALTZAINA=UDALTZAINA[0],
+UDALTZAINA[i:R]=(when (i<N-1) gelditu->UDALTZAINA[i+1]
+ 			|  atera->UDALTZAINA[i-1]
+			).
+
+||BIDEGURUTZEA=  ( forall [i:R] ( k[i]:KOTXEA ||{k[i].unekoa,k[j:R].helmuga}::BIDEA)||k[i:R]::UDALTZAINA).
+
+
