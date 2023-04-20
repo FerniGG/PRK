@@ -1,0 +1,7 @@
+BUFFER = (put -> BUFFER
+ |get -> BUFFER
+ ).
+IDAZLEA =
+(libreak.behera ->put->okupatuak.gora->IDAZLEA).
+IRAKURLEA =
+(okupatuak.behera->get->libreak.gora ->IRAKURLEA).

@@ -1,0 +1,111 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 13/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 9
+//   Ariketa Zenb : 1                          
+//   Ariketa Izena : Praktika- Jolas Parkea
+//   Enuntziatua : Jolas parke baten errepresentazio konkurrentea
+//					Bi ilara egongo dira bata VIP  eta bestea normala,
+//					banako bakoitza parkera sartu baino lehen VIP pasea edo ez erosi dezake
+//					pase hori badauka VIP ilarara joan daiteke, bestela normalera joango da
+//					Errusiar mendi-batera sartuko dira ordenean koordinatzaileak 
+//					VIP ilaran daudenei utziko dio pasatzen, ilara horretarako 
+//					eserleku totalen %20-a jada erreserbatuta daudelako, baina 
+//					VIP hainbeste ez badaude ilara normaleko 
+//					jendea eseri daiteke eserleku horietan.
+//					Aldiz, VIP eserlekuak betetzerakoan ilara normaleko pertsonak sartuko dira.
+//					Jendea sartzeko epe denbora bat egongo da, horretarako aldiunero 
+//					koordinatzailea begiratu behar du mendiaren egoera, non beteta
+//					beteta badago, edo itxarote denbora amaitzerakoan 
+//					ez bestelakorik pasatzen utzi behar, eta 
+//					errusiar m endia bere ibilbidea egingo du.
+//					
+//					Ibilbidea amaitzerakoan jendea diren ordenean aterako dira,
+//					eta momentu hortan aukeratuko dute ea argazkiak hartu nahi duten edo ez
+//					argazkiak ez badute nahi parketik aterako dira,
+//					aldiz argazkiak nahi badute, argazkiak ematen duten tokira joango dira,
+//					ilara egingo dute berriz (hemen ez dago preferentziarik) 
+//					eta dendariak argazkiak emango dizkio
+//					ondoren parketik aterako dira.
+
+const ME = 4 // Errusiar mendiaren eduki maximoa
+range MR = 0..ME // Errusiar mendiaren edukiaren rangoa
+const PK = 8 // Parkean egon daitezkeen pertsona kop
+range PR = 0..PK // Pertsona kopuruen rangoa
+const IE = 8 // Ilaren tamaina maximoa
+range IR=0..IE  // Ilararen edukiaren rangoa
+range BOOL= 0..1 // Zenbaki boolearren rangoa
+
+P_TICKET=(ticketaErosi[b:BOOL]->		if(b>0) then (sartuVIP -> itxaronVIP -> ateraVIP -> P_ARGAZKIA)
+										else(sartuNORMAL -> itxaronNORMAL -> ateraNORMAL -> P_ARGAZKIA)
+),
+P_ARGAZKIA=(argazkiaNahi[b:BOOL]->		if(b>0) then (sartuARGAZKIA -> itxaronARGAZKIA -> hartuARGAZKIA-> atera -> P_TICKET)
+										else(atera -> P_TICKET)
+).
+
+KOORD_MENDI = ( begiratu[p:MR]-> 	
+							if(0<ME-p) then (pasatzenUtzi->KOORD_MENDI)
+							else(itxarotenUtzi->KOORD_MENDI)
+).
+KOORD_ARGAZKIA= (itxarotenUtzi -> argazkiakLortu -> argazkiakEman-> KOORD_ARGAZKIA).
+//LIFO Ilara
+//k: VIP_ILARAn une honetan dauden pertsona kopurua
+//s: pertsona bat sartzen bada, zein posizioan sartu behar den
+VIP_ILARA=VIP_ILARA[0][IE],
+VIP_ILARA[k:IR][s:IR]=(when (k<IE) sartuVIP[s] -> VIP_ILARA[k+1][(s-1)%IE]
+ 							|when (k>0) ateraVIP[IE]->sartuMENDI -> VIP_ILARA[k-1][(s+1)%IE]
+).
+//LIFO Ilara
+//k: NORMAL_ILARAn une honetan dauden pertsona kopurua
+//s: pertsona bat sartzen bada, zein posizioan sartu behar den
+NORMAL_ILARA=VIP_ILARA[0][IE],
+NORMAL_ILARA[k:IR][s:IR]=(when (k<IE) sartuNORMAL[s] -> NORMAL_ILARA[k+1][(s-1)%IE]
+ 							|when (k>0) ateraNORMAL[IE] -> sartuMENDI -> NORMAL_ILARA[k-1][(s+1)%IE]
+).
+
+
+
+//FIFO Ilara
+//k: MENDI ERRUSIARean une honetan dauden pertsona kopurua
+//s: pertsona bat sartzen bada, zein posizioan sartu behar den
+//a: ateratzea dagokion pertsona, zein posiziotan dagoen
+MEN_ERR=MEN_ERR[0][0],
+							//When(k<IE and s<1(kasu honetan 4(Mendi errusiarrean dauden eserlekuak) eserlekuen %20 = 1 delako)
+							//and VIP_ILARA.k>1) sartuVIP[s] -> MEN_ERR[k+1][(s+1)%FK][a]
+							//
+							//When(k<IE and (s>=1(kasu honetan 4(Mendi errusiarrean dauden eserlekuak) eserlekuen %20 = 1 delako)
+							//or VIP_ILARA.k==0) sartuNORMAL[s] -> MEN_ERR[k+1][(s+1)%FK][a]
+							//
+MEN_ERR[k:MR][s:MR][a:MR]=(when (k<IE) sartuMENDI[s] -> MEN_ERR[k+1][(s+1)%ME][a]
+
+							//when (x==a)
+ 						  | ateraMENDI[a] -> argazkiaNahi[b:BOOL] -> MEN_ERR[k-1][s][(a+1)%ME]
+).
+
+
+
+//LIFO Ilara
+//k: ARGAZKIA_ILARAn une honetan dauden pertsona kopurua
+//s: pertsona bat sartzen bada, zein posizioan sartu behar den
+ARGAZKIA_ILARA=VIP_ILARA[0][PK],
+ARGAZKIA_ILARA[k:PR][s:PR]=(when (k<IE) sartuARGAZKIA[s] -> itxaron -> ARGAZKIA_ILARA[k+1][(s-1)%PK]
+ 							|when (k>0) hartuARGAZKIA -> ateraARGAZKIA[IE] -> ARGAZKIA_ILARA[k-1][(s+1)%PK]
+).
+
+
+/*
+
+pentsatu dut ea bi ilarak vip-ena eta normala estruktura berdinean jartzea
+//k: ITXAROTE_ILARANn une honetan dauden pertsona kopurua
+//s: pertsona bat sartzen bada, zein posizioan sartu behar den
+ITX_ILARA=ITX_ILARA[0][IE][0][2*IE+1],
+ITX_ILARA[kv:IR][sv:IR][kn:IR][sn:IRn]=(when (kv<IE) sartuVIP[sv] -> ITX_ILARA[kv+1][(sv-1)%IE][kn][sn]
+ 													|when (kv>0) ateraVIP[IE] -> ITX_ILARA[kv-1][(sv+1)%IE][kn][sn]
+													|when (kn<IE*2+1) sartuNORMAL[sn] -> ITX_ILARA[kv][sv][kn+1][(sn-1)%IE]
+ 													|when (kn>0) ateraNORMAL[2*IE+1] -> ITX_ILARA[kv][sv][kn-1][(sn+1)%IE]
+).
+
+*/
+

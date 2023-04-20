@@ -1,0 +1,11 @@
+BASATIA = ( hartu -> jan -> lo -> BASATIA ).
+SUKALDARIA = ( begiratu[k:PR] ->
+if (k<PK) then ( random[r:1..PK-k] -> bota[r] -> SUKALDARIA )
+ else SUKALDARIA
+ ).
+LAPIKOA = LAPIKOA[0],
+LAPIKOA [i:PR] = ( when (i<PK) s.bota[b:1..PK-i] -> LAPIKOA[i+b]
+| when (i>0) b[BR].hartu -> LAPIKOA[i-1]
+| s.begiratu[i] -> LAPIKOA[i]
+).
+||JANARIA = ( b[BR]:BASATIA || s:SUKALDARIA || LAPIKOA ).

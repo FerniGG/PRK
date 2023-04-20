@@ -1,0 +1,16 @@
+const PK=5 //Prozesu kopurua
+range PR=1..PK //Prozesuen indizeak
+const FK=4 //Fifoaren tamaina
+range FR=0..FK-1 //Fifoaren posizioak
+range FKR=0..FK //Fifoan egon daitezkeen prozesu kopurua
+P = ( sartu[x:FR] -> atera[x] -> P).
+//k: FIFOan une honetan dauden prozesu kopurua
+//s: prozesu bat sartzen bada, zein posizioan sartu behar den
+//a: ateratzea dagokion prozesua, zein posiziotan dagoen
+FIFO=FIFO[0][0][0],
+FIFO[k:FKR][s:FR][a:FR]=(
+ when (k<FK) sartu[s] -> FIFO[k+1][(s+1)%FK][a]
+ | atera[a] -> FIFO[k-1][s][(a+1)%FK]
+).
+||SISTEMA = ( p[PR]:P
+|| p[PR]::FIFO).

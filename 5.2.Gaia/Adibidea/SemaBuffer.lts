@@ -1,0 +1,12 @@
+const Max = 5
+range Int = 0..Max
+IDAZLEA = (put -> IDAZLEA).
+IRAKURLEA = (get -> IRAKURLEA).
+SEMAFOROA(N=0) = SEMA[N],
+SEMA[b:Int] = ( gora ->SEMA[b+1]
+ |when(b>0) behera->SEMA[b-1]
+).
+BUFFER = (put -> libreak.behera ->okupatuak.gora ->BUFFER
+ |get -> okupatuak.behera ->libreak.gora ->BUFFER
+ ).
+||BUFFERMUGATUA = (IDAZLEA || IRAKURLEA || BUFFER  ||libreak:SEMAFOROA(5) ||okupatuak:SEMAFOROA(0)  )@{put,get}.
