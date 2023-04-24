@@ -1,3 +1,17 @@
+package G5_3_basatiakBegiratu;
+//////////////////////////////////////////////////
+
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 24/04/2023                        ///
+//////////////////////////////////////////////////
+
+//Gai Zenb : 5.1
+//Ariketa Zenb : 3                          
+//Ariketa Izena : BasatienFestaBotaAusaz 
+//Enuntziatua : Basatien festa, baina orain:
+//- sukaldariak hainbat puska bota, eta
+//- basatiek hainbat puska hartu, eta
+//- bota edo hartu aurretik,lapikoan zenbat dagoen begiratzen dute
 import java.util.Random;
 
 public class BasatiakApp {
@@ -22,6 +36,10 @@ public class BasatiakApp {
 
 }
 
+/*
+ * BASATIA = ( begiratu[p:PR]-> if(p>0) then (hartu[r:1..p]->jan->lo->BASATIA)
+ * else(askatu->BASATIA)).
+ */
 class Basatiak extends Thread {
 	int basatiaid;
 	Kontrolatzailea kontrol;
@@ -39,27 +57,31 @@ class Basatiak extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
-/*BASATIA = ( begiratu[p:PR]-> 	
-							if(p>0) then (hartu[r:1..p]->jan->lo->BASATIA)
-							else(askatu->BASATIA)).*/
+
+	private void itxaron() throws InterruptedException {
+		int rand = getRandomNumberInRange(1, 30);
+		sleep(rand * 100);
+	}
+
+	/*
+	 * BASATIA = ( begiratu[p:PR]-> if(p>0) then (hartu[r:1..p]->jan->lo->BASATIA)
+	 * else(askatu->BASATIA)).
+	 */
 	public void run() {
-		int rand = 0;
 		try {
 			while (true) {
 				int zenbatDaude = kontrol.LapikoaBegiratu(this.basatiaid);
+				itxaron();
 				if (zenbatDaude != 0) {
 					kontrol.LapikotikHartu(this.basatiaid, getRandomNumberInRange(1, zenbatDaude));
-					rand = getRandomNumberInRange(1, 30);
-					sleep(rand * 100);
+					itxaron();
 					p.jan(this.basatiaid);
-					rand = getRandomNumberInRange(1, 30);
-					sleep(rand * 100);
+					itxaron();
 					p.lo(this.basatiaid);
-					rand = getRandomNumberInRange(1, 30);
-					sleep(rand * 100);
+					itxaron();
 				} else {
 					kontrol.LapikoaAskatu();
-					sleep(rand * 100);
+					itxaron();
 				}
 
 			}
@@ -67,6 +89,7 @@ class Basatiak extends Thread {
 		}
 	}
 }
+
 
 class Sukaldaria extends Thread {
 	Kontrolatzailea kontrol;
@@ -85,27 +108,27 @@ class Sukaldaria extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
-/*SUKALDARIA = ( begiratu[p:PR]-> 	
-							if(0<=PK-p) then (bota[r:0..PK-p]->SUKALDARIA)
-							else(askatu->SUKALDARIA)).*/
-	public void run() {
-		int rand = 1;
-		try {
-			int zenbatDaude = kontrol.LapikoaBegiratu(-1);
-				zenbatbota = getRandomNumberInRange(1, BasatiakApp.Misiolari_puska_Max - zenbatDaude);
-				kontrol.LapikoaBete(zenbatbota);
-				sleep(rand * 500);
-			while (true) {
 
-				zenbatDaude = kontrol.LapikoaBegiratu(-1);
+	private void itxaron() throws InterruptedException {
+		int rand = getRandomNumberInRange(1, 30);
+		sleep(rand * 100);
+	}
+
+	/*
+	 * SUKALDARIA = ( begiratu[p:PR]-> if(0<=PK-p) then
+	 * (bota[r:0..PK-p]->SUKALDARIA) else(askatu->SUKALDARIA)).
+	 */
+	public void run() {
+		try {
+			while (true) {
+				int zenbatDaude = kontrol.LapikoaBegiratu(-1);
 				if (zenbatDaude < BasatiakApp.Misiolari_puska_Max) {
 					zenbatbota = getRandomNumberInRange(1, BasatiakApp.Misiolari_puska_Max - zenbatDaude);
 					kontrol.LapikoaBete(zenbatbota);
-					rand = getRandomNumberInRange(0, 20);
-					sleep(rand * 500);
+					itxaron();
 				} else {
 					kontrol.LapikoaAskatu();
-					sleep(rand * 500);
+					itxaron();
 				}
 			}
 		} catch (InterruptedException e) {
@@ -124,8 +147,11 @@ class Kontrolatzailea {
 		pantaila = pant;
 		unekop = 0;
 	}
-/* when (blok==0)	s.begiratu[i] 		-> LAPIKOA[i][1] 
-when (blok==0) b[BR].begiratu[i] 	-> LAPIKOA[i][1]*/
+
+	/*
+	 when (blok==0)	s.begiratu[i] 		-> LAPIKOA[i][1]
+	| when (blok==0)	b[BR].begiratu[i] 	-> LAPIKOA[i][1]
+	 */
 	synchronized int LapikoaBegiratu(int id) throws InterruptedException {
 		while (!(block))
 			wait();
@@ -134,12 +160,16 @@ when (blok==0) b[BR].begiratu[i] 	-> LAPIKOA[i][1]*/
 		notify();
 		return unekop;
 	}
-/*when  (blok==1) s.askatu		-> LAPIKOA[i][0]
-when  (blok==1) b[BR].askatu -> LAPIKOA[i][0]*/
+
+	/*
+	 * when (blok==1) s.askatu -> LAPIKOA[i][0] when (blok==1) b[BR].askatu ->
+	 * LAPIKOA[i][0]
+	 */
 	synchronized void LapikoaAskatu() throws InterruptedException {
 		block = true;
 		notify();
 	}
+
 //when (i<PK && blok==1)	s.bota[b:1..PK-i] 	-> LAPIKOA[i+b][0]
 	synchronized void LapikoaBete(int zenbat) throws InterruptedException {
 		int lekulibre = this.misiolariPuskakMax - unekop;
@@ -153,6 +183,7 @@ when  (blok==1) b[BR].askatu -> LAPIKOA[i][0]*/
 		notify();
 
 	}
+
 //when (i>0 && blok==1) 	b[BR].hartu[p:1..i] -> LAPIKOA[i-p][0]
 	synchronized void LapikotikHartu(int id, int zenbat) throws InterruptedException {
 		while (!(unekop > 0))
@@ -237,3 +268,4 @@ class Pantaila {
 		System.out.println("]");
 	}
 }
+

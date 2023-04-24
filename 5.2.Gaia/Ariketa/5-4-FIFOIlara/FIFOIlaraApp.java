@@ -1,4 +1,16 @@
+package G5_4_FIFO;
 import java.util.Random;
+
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 24/4/2023                        ///
+//////////////////////////////////////////////////
+
+//Gai Zenb : 5.2
+//Ariketa Zenb : 4                         
+//Ariketa Izena : FIFOIlara  
+//Enuntziatua : FIFO ilara Java-z inplementatu:
+
 
 public class FIFOIlaraApp {
 	public final static int ProzKop = 10;
@@ -28,7 +40,9 @@ public class FIFOIlaraApp {
 
 	}
 }
-
+//kont: FIFOan une honetan dauden prozesu kopurua
+//in: prozesu bat sartzen bada, zein posizioan sartu behar den
+//out: ateratzea dagokion prozesua, zein posiziotan dagoen
 class Buffer {
 	int kont = 0;
 	char[] buf;
@@ -136,4 +150,5 @@ class Pantaila {
 		System.out.print(s);
 	}
 }
+
 

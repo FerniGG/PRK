@@ -2,7 +2,7 @@ package A1.Asimetria;
 
 //////////////////////////////////////////////////
 ///   Egilea: Fernando Gonzalez                ///
-///   Data : 1/04/2023                        ///
+///   Data : 24/04/2023                        ///
 //////////////////////////////////////////////////
 
 //Gai Zenb : 6
@@ -12,7 +12,7 @@ package A1.Asimetria;
 
 import java.util.Random;
 
-public class FiloApp {
+public class A1FiloApp {
 	public final static int N = 5;
 
 	public static void main(String args[]) {
@@ -30,6 +30,7 @@ public class FiloApp {
 }
 
 
+//zenb: hartuko duen lehenengo sardezka ezkerrekoa den edo ez adierazten du
 class Filosofoa extends Thread {
 	Pantaila pant;
 	String space;
@@ -74,15 +75,7 @@ class Filosofoa extends Thread {
 						pant.idatzi(zenb, "ezker.hartu du");
 						itxaron();
 						pant.idatzi(zenb, "jaten");
-						itxaron();
-						eskubikoa.put();
-						pant.idatzi(zenb, "eskub.utzi du");
-						itxaron();
-						ezkerrekoa.put();
-						pant.idatzi(zenb, "ezker.utzi du");
-						itxaron();
-						pant.idatzi(zenb, "altxatu");
-						itxaron();
+						itxaron();					
 				} else {
 						pant.idatzi(zenb, "pentsatzen");
 						itxaron();
@@ -96,21 +89,24 @@ class Filosofoa extends Thread {
 						itxaron();
 						pant.idatzi(zenb, "jaten");
 						itxaron();
-						ezkerrekoa.put();
-						pant.idatzi(zenb, "ezker.utzi du");
-						itxaron();
-						eskubikoa.put();
-						pant.idatzi(zenb, "eskub.utzi du");
-						itxaron();
-						pant.idatzi(zenb, "altxatu");
-						itxaron();
+						
 				}
+				 //jan ostean lehenengo ezkerreko sardezka utziko du eta ondoren eskuinekoa
+				ezkerrekoa.put();
+				pant.idatzi(zenb, "ezker.utzi du");
+				itxaron();
+				eskubikoa.put();
+				pant.idatzi(zenb, "eskub.utzi du");
+				itxaron();
+				pant.idatzi(zenb, "altxatu");
+				itxaron();
 			}
 		} catch (InterruptedException e) {
 		}
 	}
 }
 
+//SARD libre badago (hartuta==0) sardeska hartu bestela utzi.
 class Sardeska {
 	private boolean hartua = false;
 	private int zenbakia;

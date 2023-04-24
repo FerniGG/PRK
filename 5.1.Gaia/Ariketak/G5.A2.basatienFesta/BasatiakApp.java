@@ -1,3 +1,5 @@
+package G5_2_basatienFesta;
+
 import java.util.Random;
 
 public class BasatiakApp {
@@ -40,20 +42,21 @@ class Basatiak extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
+	public void itxaron() throws InterruptedException {
+		int rand = getRandomNumberInRange(1, 30);
+		sleep(rand * 100);
+	}
 //BASATIA = (hartu->jan->lo->BASATIA).
 	public void run() {
 		int rand = 0;
 		try {
 			while (true) {
 				kontrol.LapikotikHartu(this.basatiaid);
-				rand = getRandomNumberInRange(1, 15);
-				sleep(rand * 100);
+				itxaron();
 				p.jan(this.basatiaid);
-				rand = getRandomNumberInRange(1, 15);
-				sleep(rand * 100);
+				itxaron();
 				p.lo(this.basatiaid);
-				rand = getRandomNumberInRange(1, 15);
-				sleep(rand * 100);
+				itxaron();
 
 			}
 		} catch (InterruptedException e) {
@@ -78,14 +81,18 @@ class Sukaldaria extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
+	public void itxaron() throws InterruptedException {
+		int rand = getRandomNumberInRange(1, 30);
+		sleep(rand * 100);
+	}
+	
 //SUKALDARIA = (bota[BT]->SUKALDARIA).
 	public void run() {
 		int rand = 1;
 		try {
 			while (true) {
 				kontrol.LapikoaBete(zenbatbota);
-				rand = getRandomNumberInRange(1, 10);
-				sleep(rand * 100);
+				itxaron();
 
 			}
 		} catch (InterruptedException e) {
@@ -186,3 +193,4 @@ class Pantaila {
 		System.out.println("]");
 	}
 }
+

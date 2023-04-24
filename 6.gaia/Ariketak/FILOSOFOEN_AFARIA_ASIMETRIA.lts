@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////
 ///   Egilea: Fernando Gonzalez                ///
-///   Data : 1/04/2023                        ///
+///   Data : 24/04/2023                        ///
 //////////////////////////////////////////////////
 
 //   Gai Zenb : 6
@@ -12,12 +12,15 @@ range R=0..N-1
 
 
 SARD = SARD[0],
+//SARD libre badago (h==0) sardeska hartu bestela utzi.
 SARD[h:0..1] = (when (h==0) get->SARD[1]
  		| put->SARD[0]).
+//I: hartuko duen lehenengo sardezka ezkerrekoa den edo ez adierazten du
 FIL(I=0) = (eseri->
 if (I%2==1) then (ezker.get ->eskubi.get->JAN)
  else (eskubi.get->ezker.get ->JAN)
  ),
+ //jan ostean lehenengo ezkerreko sardezka utziko du eta ondoren eskuinekoa
 JAN = (jan->ezker.put->eskubi.put->altxatu->FIL).
 ||AFARIA=forall[i:R]
 (fil[i]:FIL(i) ||
