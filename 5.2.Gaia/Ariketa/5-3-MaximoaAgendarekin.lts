@@ -10,7 +10,7 @@
 //	 				FSP eredua eman eta Javaz inplementatu, 
 
 const N=5 //bufferraren tamaina
-range R=0..N //bufferaren rangoa
+range R=-1..N //bufferaren rangoa
 const PK=2 //prozesu kop
 range PR=1..PK
 range J=0..PK
@@ -19,12 +19,13 @@ P = (hartu->konparatu->sartu->P).
 //AGENDA[uneko i-ren posizioa][Zenbat prozesuk hartu duten zenbakiak konparatzeko]
 AGENDA = AGENDA[N][0],
 				 //Baldin eta agendan zenbakiak hartzeko badaude
-AGENDA[i:R][j:J]=(when(i>0) pr[PR].hartu -> [i][i-1] -> AGENDA[i-2][j+1]
+AGENDA[i:R][j:J]=(when(i>0) pr[PR].hartu->[i][i-1] -> AGENDA[i-2][j+1]
 				//zenbakiak hartzeko ez badadude, sartuko den posiziora joan
-				// sartuko den pozizioa ==1 bada eta bakarrik dago prozesu bat konparazioa
-				//egiten sartuko den zenbakia maxximoa izango da
+				// sartuko den pozizioa ==-1 bada eta bakarrik dago prozesu bat konparazioa
+				//egiten sartuko den zenbakia maximoa izango da
 				//bestela zenbakia sartu besterik
- 				| pr[PR].sartu -> [i+1] -> if(i==1 && j==1)then (max->STOP  )
+ 				| pr[PR].sartu->[i+1] -> if(i==-1 && j==1)then (max->STOP  )
 								else AGENDA[i+1][j-1]
+				
 ).
 ||MAXIMOA=(pr[PR]:P || AGENDA).

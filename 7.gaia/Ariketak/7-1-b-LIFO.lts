@@ -1,0 +1,32 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 27/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 7
+//   Ariketa Zenb : 1-b                         
+//   Ariketa Izena : LIFOIlara  
+//   Enuntziatua : Bizitasun propietatea ez dela bortxatzen.
+
+const PK=4 //Prozesu kopurua
+range PR=1..PK //Prozesuen indizeak
+const FK=3 //Lifoaren tamaina
+range FR=0..FK-1 //Lifoaren posizioak
+range FKR=0..FK //Lifoan egon daitezkeen prozesu kopurua
+const B=6
+range BR=0..B // Pila borratzeko iterazioen rangoa
+P = ( sartu[x:FR] -> atera[x] -> P).
+//k: LIFOan une honetan dauden prozesu kopurua
+//s: prozesu bat sartzen bada, zein posizioan sartu behar den eta ateratzen bada s-1 posiziotik atera behar da.
+LIFO=LIFO[0][0],
+LIFO[k:FKR][i:BR]=(when (k<FK && i<B) sartu[k] -> LIFO[k+1][i+1]
+ 				| when (k>0) atera[k-1] -> if(k-1==0) then LIFO[0][0]
+											else LIFO[k-1][i]
+).
+||SISTEMA = ( p[PR]:P|| p[PR]::LIFO).
+
+||SISTEMA_A= (SISTEMA)<<{p[PR].sartu[FR]}.
+
+//Auureko ariketaren arazoa konpontzeko Pilari atributu bat gehitzen diogu
+//non prozesu bat sartzerakoan kontagailu hori inkrementatzen da, eta nire kasuan 6-ra heltzan ez du prozesu
+//gehiagorik sartzen utziko barnean daudenak atera arte.

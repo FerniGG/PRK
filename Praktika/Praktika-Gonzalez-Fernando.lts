@@ -37,75 +37,51 @@ range PR = 0..PK // Pertsona kopuruen rangoa
 const IE = 8 // Ilaren tamaina maximoa
 range IR=0..IE  // Ilararen edukiaren rangoa
 range BOOL= 0..1 // Zenbaki boolearren rangoa
+const A=2 //Argazki dendaren langileen kopuru maximoa
+range AR=1..A
+range M_EGOERAK=0..2//Mendiaren egoeren rangoa
 
-P_TICKET=(ticketaErosi[b:BOOL]->		if(b>0) then (sartuVIP -> itxaronVIP -> ateraVIP -> P_ARGAZKIA)
-										else(sartuNORMAL -> itxaronNORMAL -> ateraNORMAL -> P_ARGAZKIA)
-),
-P_ARGAZKIA=(argazkiaNahi[b:BOOL]->		if(b>0) then (sartuARGAZKIA -> itxaronARGAZKIA -> hartuARGAZKIA-> atera -> P_TICKET)
-										else(atera -> P_TICKET)
+P_TICKET=(ticketaErosi[b:BOOL]->		if(b==1) then (vip.sartu[p:IR] -> vip.atera[p]->igoAtrakziora -> vip.desblok -> P_ARGAZKIA)
+												 else(normal.sartu[p:IR] -> mornal.atera[p]-> igoAtrakziora -> normal.desblok ->P_ARGAZKIA)
 ).
-
-KOORD_MENDI = ( begiratu[p:MR]-> 	
-							if(0<ME-p) then (pasatzenUtzi->KOORD_MENDI)
-							else(itxarotenUtzi->KOORD_MENDI)
-).
-KOORD_ARGAZKIA= (itxarotenUtzi -> argazkiakLortu -> argazkiakEman-> KOORD_ARGAZKIA).
-//LIFO Ilara
-//k: VIP_ILARAn une honetan dauden pertsona kopurua
-//s: pertsona bat sartzen bada, zein posizioan sartu behar den
-VIP_ILARA=VIP_ILARA[0][IE],
-VIP_ILARA[k:IR][s:IR]=(when (k<IE) sartuVIP[s] -> VIP_ILARA[k+1][(s-1)%IE]
- 							|when (k>0) ateraVIP[IE]->sartuMENDI -> VIP_ILARA[k-1][(s+1)%IE]
-).
-//LIFO Ilara
-//k: NORMAL_ILARAn une honetan dauden pertsona kopurua
-//s: pertsona bat sartzen bada, zein posizioan sartu behar den
-NORMAL_ILARA=VIP_ILARA[0][IE],
-NORMAL_ILARA[k:IR][s:IR]=(when (k<IE) sartuNORMAL[s] -> NORMAL_ILARA[k+1][(s-1)%IE]
- 							|when (k>0) ateraNORMAL[IE] -> sartuMENDI -> NORMAL_ILARA[k-1][(s+1)%IE]
-).
-
-
-
-//FIFO Ilara
-//k: MENDI ERRUSIARean une honetan dauden pertsona kopurua
-//s: pertsona bat sartzen bada, zein posizioan sartu behar den
-//a: ateratzea dagokion pertsona, zein posiziotan dagoen
-MEN_ERR=MEN_ERR[0][0],
-							//When(k<IE and s<1(kasu honetan 4(Mendi errusiarrean dauden eserlekuak) eserlekuen %20 = 1 delako)
-							//and VIP_ILARA.k>1) sartuVIP[s] -> MEN_ERR[k+1][(s+1)%FK][a]
-							//
-							//When(k<IE and (s>=1(kasu honetan 4(Mendi errusiarrean dauden eserlekuak) eserlekuen %20 = 1 delako)
-							//or VIP_ILARA.k==0) sartuNORMAL[s] -> MEN_ERR[k+1][(s+1)%FK][a]
-							//
-MEN_ERR[k:MR][s:MR][a:MR]=(when (k<IE) sartuMENDI[s] -> MEN_ERR[k+1][(s+1)%ME][a]
-
-							//when (x==a)
- 						  | ateraMENDI[a] -> argazkiaNahi[b:BOOL] -> MEN_ERR[k-1][s][(a+1)%ME]
-).
-
 
 
 //LIFO Ilara
-//k: ARGAZKIA_ILARAn une honetan dauden pertsona kopurua
+//k: ILARAn une honetan dauden pertsona kopurua
 //s: pertsona bat sartzen bada, zein posizioan sartu behar den
-ARGAZKIA_ILARA=VIP_ILARA[0][PK],
-ARGAZKIA_ILARA[k:PR][s:PR]=(when (k<IE) sartuARGAZKIA[s] -> itxaron -> ARGAZKIA_ILARA[k+1][(s-1)%PK]
- 							|when (k>0) hartuARGAZKIA -> ateraARGAZKIA[IE] -> ARGAZKIA_ILARA[k-1][(s+1)%PK]
+//a:pertsona bat ateratzen bada, zein posizioan sartu behar den
+//ablok: ateratzeko bokeoa
+ILARA=ILARA[0][0][0][0],
+ILARA[k:IR][s:IR][a:IR][ablok:BOOL]=(when (k<IE) 			{vip,normal}.sartu[s]-> ILARA[k+1][(s+1)%IE][a][ablok]
+ 									|when (k>0 || ablok==0) {vip,normal}.atera[a]-> ILARA[k-1][s][(a+1)%IE][1]
+									|				 		desblok -> ILARA[k][s][a][0]
 ).
+//MENDIKO KOORDINTZAILEA
+//k: mendian dagoen jende kopurua adierazten du
+//e: mendia martxan dagoen edo ez adierazten du. 0 geldituta martxan hasi baino lehen, 1 martxan , geldituta martxan hasi ostean
+KOORD_MENDI=KOORD_MENDI[0][0]
+KOORD_MENDI[k:MR][e:M_EGOERAK] = ( when(k<ME && e==0) 	igoAtrakziora->KOORD_MENDI[k+1][0])
+							| when(k==ME && e==0) 	martxanJarri->KOORD_MENDI[k][1]
+							| when(e==1) 		  	gelditu->KOORD_MENDI[k][2]
+							| when(k>0 && e==2) 	jaitziAtrakziotik->KOORD_MENDI[k-1][2]
+							| when(k==0 && e==2) 	ateaIreki->KOORD_MENDI[k][0]
 
-
-/*
-
-pentsatu dut ea bi ilarak vip-ena eta normala estruktura berdinean jartzea
-//k: ITXAROTE_ILARANn une honetan dauden pertsona kopurua
-//s: pertsona bat sartzen bada, zein posizioan sartu behar den
-ITX_ILARA=ITX_ILARA[0][IE][0][2*IE+1],
-ITX_ILARA[kv:IR][sv:IR][kn:IR][sn:IRn]=(when (kv<IE) sartuVIP[sv] -> ITX_ILARA[kv+1][(sv-1)%IE][kn][sn]
- 													|when (kv>0) ateraVIP[IE] -> ITX_ILARA[kv-1][(sv+1)%IE][kn][sn]
-													|when (kn<IE*2+1) sartuNORMAL[sn] -> ITX_ILARA[kv][sv][kn+1][(sn-1)%IE]
- 													|when (kn>0) ateraNORMAL[2*IE+1] -> ITX_ILARA[kv][sv][kn-1][(sn+1)%IE]
 ).
+KOORD_ARGAZKIA=(argazkiaImprimatu->argazkiaEman->KOORD_ARGAZKIA).
 
-*/
+P_ARGAZKIA = (sartu->argazkiaEskatu->argazkiaHartu->atera->P_TICKET).
+
+//ARGAZKIEN_DENDA
+//k: Dendan daduden Pertsona kop
+//a: Argazki bat eskatu den edo ez
+//e: Argazkia eman den edo ez
+ARGAZKIEN_DENDA=ARGAZKIEN_DENDA[0][0][0],
+ARGAZKIEN_DENDA[k:PK][a:AR][e:AR]= 	(when(k<PK) 		p[PR].sartu->ARGAZKIEN_DENDA[k+1][a][e]
+						   		|when(a==0) 					p[PR].argazkiaEskatu->ARGAZKIEN_DENDA[k][1][e]
+								|when(a==1 && e==0)			ad[AR].argazkiaImprimatu->argazkiaEman->ARGAZKIEN_DENDA[k][a][1]
+								|when(e==1 && a==1) 		p[PR].argazkiaHartu->ARGAZKIEN_DENDA[k][0][0]
+								|							p[PR].atera->ARGAZKIEN_DENDA[k-1][0][0]
+).
+//ARGAZKIENTZAKO TUTORETZEN EREDUA ERABILI
+
 

@@ -23,29 +23,33 @@ range IKR = 1..IK 	// Ikasle rangoa
 range ERABR = 0..1	// ERABR == 1 denean dirua sartuko du ikasleak, ERABR==0 bada hartu
 range BLOK = 0..1 	// Blokeoa errepresentatzeko
 
-IKASLEA = ( auzas[e:ERABR][d:BR] -> 
-			if (e==0) then (begiratu[d] ->
-								if (d>0)	then ( auzas[h:1..d]	-> hartu[h] -> IKASLEA)
-								else ( askatu -> IKASLEA ))
-		  	else (begiratu[d] ->
-								if (d<BT)	then(auzas[s:1..BT-d] -> sartu[s] -> IKASLEA)
-								else ( askatu -> IKASLEA ))
-			
-		  ).
+IKASLEA = ( auzas[e:ERABR] -> 
+			if (e==0) then (hartzera ->IKHARTU)
+			else(sartzera->IKSARTU)	
+		  ),
+IKHARTU=(begiratu[p:BR]-> 	
+							if(p>0) then (hartu[h:1..p]->IKASLEA)
+							else(askatu->IKASLEA)
+),
 
+IKSARTU=( begiratu[p:BR]-> 	
+							if(0<BT-p) then (sartu[s:1..BT-p]->IKASLEA)
+							else(askatu->IKASLEA)
+).
 JABEA = ( begiratu[dk:BR] ->
 				if (dk>=JA) then ( hartu[JA] -> JABEA )
 				else (askatu -> JABEA)
 		  ).
-//BOTEA[uneko diru kop][ikasleak egindako erabakia gordetzen da][blokeoa]
-BOTEA = BOTEA[0][0][0],
-BOTEA [i:BR][erab:ERABR][blok:BLOK] = 	( when (blok==0)			 j.begiratu[i] 		 -> BOTEA[i][0][1]
-									| when (blok==0) ik[IKR].auzas[e:ERABR][i]		 -> BOTEA[i][e][1]
-									| when (i>0)  ik[IKR].hartu[h:1..i]	 -> BOTEA[i-h][1][0]
-				 					| when (i<BT) ik[IKR].sartu[s:1..BT-i] -> BOTEA[i+s][0][0]
-									| when (i>=JA)			 j.hartu[JA] 			 -> BOTEA[i-JA][0][0]
-									| j.askatu-> BOTEA[i][0][0]
-									| ik[IKR].askatu  -> BOTEA[i][0][0]
+//BOTEA[uneko diru kop][blokeoa]
+BOTEA = BOTEA[0][0],
+BOTEA [i:BR][blok:BLOK] = 	( when (blok==0)			 j.begiratu[i] 		 -> BOTEA[i][1]
+							| when (blok==0) ik[IKR].begiratu[i] -> BOTEA[i][1]
+							| when (i>0 && blok==1)  ik[IKR].hartu[h:1..i]	 -> BOTEA[i-h][0]
+				 			| when (i<BT && blok==1) ik[IKR].sartu[s:1..BT-i] -> BOTEA[i+s][0]
+							| when (i>=JA && blok==1)			 j.hartu[JA] 			 -> BOTEA[i-JA][0]
+							| j.askatu-> BOTEA[i][0]
+							| ik[IKR].askatu  -> BOTEA[i][0]
 				 					).
 
 ||JATORRAK = ( ik[IKR]:IKASLEA || j:JABEA || BOTEA ).
+

@@ -25,19 +25,19 @@ const N=2 //gelaren tamaina
 range R=0..N //gelaren rangoa
 const PK=5 //ikasle kop
 range PR=0..PK //ikasleen rangoa
-range B=0..1//blokeoaren rangoa
-IK = (sartu->galdetu->IK).
-IKA = (atera->IKA).
+range BOOL=0..1//blokeoaren rangoa
+IK = (sartu->galdetu->erantzunaJaso->atera->IK).
 IR=(pentsatu->erantzun->IR).
 
-//GELA[gelako eserlekuak errepresentatzeko]
-//[nori erantzun behar dion lehenengo]
-//[0 baldin blokeoa desaktibatuta badago 1 bestela ]
-GELA=GELA[0][0][0][0],
-GELA[i:PR][s:R][a:R][blok:B]=(when (i<N && blok==0) ik[PR].sartu[s] -> GELA[i+1][(s+1)%N][a][1]
-|when (i>0 && blok==1) ir.pentsatu[a] -> GELA[i][s][a][0]
-//when (x==a)
- |when (i>0 && blok==0) ik[PR].atera[s] -> GELA[i-1][s][(a+1)%N][0]
+//Gela
+//k: gelan daduden ikasle kop
+//g: galdera bat egin den edo ez
+//e: erantzuna eman den edo ez
+GELA=GELA[0][0][0],
+GELA[k:R][g:BOOL][e:BOOL]= 	(when(k<N) 			ik[PR].sartu->GELA[k+1][g][e]
+						   	|when(g==0) 		ik[PR].galdetu->GELA[k][1][e]
+							|when(g==1 && e==0)	ir.pentsatu->ir.erantzun->GELA[k][g][1]
+							|when(e==1 && g==1) ik[PR].erantzunaJaso->GELA[k][0][0]
+							|ik[PR].atera->GELA[k-1][0][0]
 ).
-
-||TUTORETZA=(ik[PR]:IK || ik[PR]:IKA|| ir:IR || GELA).
+||TUTORETZA=(ik[PR]:IK || ir:IR || GELA).

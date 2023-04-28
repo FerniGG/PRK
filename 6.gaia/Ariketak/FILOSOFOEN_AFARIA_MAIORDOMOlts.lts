@@ -25,6 +25,7 @@ SARD[h:0..1] = (when (h==0) get->SARD[1]
 FIL = (eseri->eskubi.get->ezker.get ->JAN),
 JAN = (jan->ezker.put->eskubi.put->altxatu->FIL).
 
+//i: jada eseritako filosofo kop
 MAIOR=MAIOR[0],
 MAIOR[i:R]=(when (i<N-1) eseri->MAIOR[i+1]
  			|  altxatu->MAIOR[i-1]

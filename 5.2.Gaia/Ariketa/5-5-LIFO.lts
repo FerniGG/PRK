@@ -16,11 +16,9 @@ range FR=0..FK-1 //Lifoaren posizioak
 range FKR=0..FK //Lifoan egon daitezkeen prozesu kopurua
 P = ( sartu[x:FR] -> atera[x] -> P).
 //k: LIFOan une honetan dauden prozesu kopurua
-//s: prozesu bat sartzen bada, zein posizioan sartu behar den eta ateratzen bada s-1 posiziotik atera behar da.
-LIFO=LIFO[0][0],
-LIFO[k:FKR][s:FR]=(
- when (k<FK) sartu[s] -> LIFO[k+1][(s+1)%FK]
- | when (k>0) atera[s-1] -> LIFO[k-1][(s-1)%FK]
+LIFO=LIFO[0],
+LIFO[k:FKR]=(when (k<FK) sartu[k] -> LIFO[k+1]
+ 				| when (k>0) atera[k-1] -> LIFO[k-1]
 ).
 ||SISTEMA = ( p[PR]:P
 || p[PR]::LIFO).

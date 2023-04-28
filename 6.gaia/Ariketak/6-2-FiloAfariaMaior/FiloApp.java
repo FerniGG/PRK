@@ -36,7 +36,7 @@ public class FiloApp {
 		}
 	}
 }
-
+//filoKop: jada eseritako filosofo kop
 class Maiordomoa extends Thread {
 	Pantaila pant;
 	int filoKop;

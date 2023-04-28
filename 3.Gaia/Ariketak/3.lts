@@ -1,0 +1,15 @@
+range Bool = 0..4
+EGILE = (egin->EGILE).
+ERAB = (eskuratu->erabili->askatu->ERAB).
+BALIAB =BALIAB[0],
+BALIAB[i:Bool] = (when (i==0 || i==1 ) x.egin -> if(i==0) then BALIAB[2]
+												else BALIAB[3]
+				|when (i==0 || i==2 ) y.egin -> if(i==0)then BALIAB[1]
+												else BALIAB[3]
+				|when (i==3) {a,b}.eskuratu -> BALIAB[4]
+				| when (i==4) {a,b}.askatu -> BALIAB[0]
+ ).
+||ERAB_BALIAB = ( {x,y}:EGILE || {a,b}:ERAB ||BALIAB).
+
+
+

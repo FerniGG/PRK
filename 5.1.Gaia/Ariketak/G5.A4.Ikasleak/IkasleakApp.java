@@ -1,3 +1,5 @@
+package G5_4_Ikasleak;
+
 import java.util.Random;
 
 public class IkasleakApp {
@@ -39,44 +41,53 @@ class Ikasleak extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
-/*IKASLEA = ( auzas[e:ERABR][d:BR] -> 
-			if (e==0) then (begiratu[d] ->
-								if (d>0)	then ( auzas[h:1..d]	-> hartu[h] -> IKASLEA)
-								else ( askatu -> IKASLEA ))
-		  	else (begiratu[d] ->
-								if (d<BT)	then(auzas[s:1..BT-d] -> sartu[s] -> IKASLEA)
-								else ( askatu -> IKASLEA ))
-			
-		  ).*/
+
+	private void itxaron() throws InterruptedException {
+		int rand = getRandomNumberInRange(1, 30);
+		sleep(rand * 100);
+	}
+
 	public void run() {
-		int rand = 0;
 		int zenbatDaude = 0;
 		int aukera = 0;
 		int zenbatBota;
 		try {
 			while (true) {
+				itxaron();
+				/* IKASLEA = ( auzas[e:ERABR] -> */
 				aukera = getRandomNumberInRange(0, 1);
 				kontrol.SartuBota(this.id, aukera);
 				zenbatDaude = kontrol.BoteaBegiratu(this.id);
+				/*
+				 * if (e==0) then (hartzera ->IKHARTU)
+				 */
 				if (aukera == 0) {
+
+					/*
+					 * IKHARTU=(begiratu[p:BR]-> if(p>0) then (hartu[h:1..p]->IKASLEA)
+					 * else(askatu->IKASLEA) ),
+					 */
 					if (zenbatDaude != 0) {
 						kontrol.BotetikHartu(this.id, getRandomNumberInRange(1, zenbatDaude));
-						rand = getRandomNumberInRange(1, 30);
-						sleep(rand * 100);
-						sleep(rand * 100);
+						itxaron();
 					} else {
 						kontrol.BoteaAskatu(this.id);
-						sleep(rand * 2000);
+						itxaron();
 					}
+					/* else(sartzera->IKSARTU) */
 				} else {
+
+					/*
+					 * IKSARTU=( begiratu[p:BR]-> if(0<BT-p) then (sartu[s:1..BT-p]->IKASLEA)
+					 * else(askatu->IKASLEA) ).
+					 */
 					if (zenbatDaude < IkasleakApp.Edukiera_Max) {
 						zenbatBota = getRandomNumberInRange(1, IkasleakApp.Edukiera_Max - zenbatDaude);
 						kontrol.BoteaBete(zenbatBota, this.id);
-						rand = getRandomNumberInRange(0, 20);
-						sleep(rand * 500);
+						itxaron();
 					} else {
 						kontrol.BoteaAskatu(this.id);
-						sleep(rand * 500);
+						itxaron();
 					}
 				}
 			}
@@ -100,23 +111,30 @@ class Jabea extends Thread {
 		return r.ints(min, (max + 1)).findFirst().getAsInt();
 
 	}
-/*JABEA = ( begiratu[dk:BR] ->
-				if (dk>=JA) then ( hartu[JA] -> JABEA )
-				else (askatu -> JABEA)
-		  ).*/
+
+	private void itxaron() throws InterruptedException {
+		int rand = getRandomNumberInRange(1, 30);
+		sleep(rand * 100);
+	}
+
+	/*
+	 * JABEA = ( begiratu[dk:BR] -> if (dk>=JA) then ( hartu[JA] -> JABEA ) else
+	 * (askatu -> JABEA)
+	 */
 	public void run() {
 		int rand = 1;
 		int zenbatDaude = 0;
 		try {
 			while (true) {
+				itxaron();
 				zenbatDaude = kontrol.BoteaBegiratu(-1);
 				if (zenbatDaude >= IkasleakApp.Alokairua) {
 					kontrol.AlokairuaHartu(-1);
 					rand = getRandomNumberInRange(1, 30);
-					sleep(rand * 100);
+					itxaron();
 				} else {
 					kontrol.BoteaAskatu(-1);
-					sleep(rand * 2000);
+					itxaron();
 				}
 			}
 		} catch (InterruptedException e) {
@@ -133,7 +151,9 @@ class Kontrolatzailea {
 		pantaila = pant;
 		unekop = 0;
 	}
-// when (blok==0)			 j.begiratu[i] 		 -> BOTEA[i][0][1]
+
+//	when (blok==0)			 j.begiratu[i] 		 -> BOTEA[i][1]
+	// | when (blok==0) ik[IKR].begiratu[i] -> BOTEA[i][1]
 	synchronized int BoteaBegiratu(int id) throws InterruptedException {
 		while (!(block))
 			wait();
@@ -142,14 +162,17 @@ class Kontrolatzailea {
 		notify();
 		return unekop;
 	}
-//| j.askatu	 -> BOTEA[i][0][0]
-//| ik[IKR].askatu 								 -> BOTEA[i][0][0]
+
+	/*
+	 * | j.askatu-> BOTEA[i][0] | ik[IKR].askatu -> BOTEA[i][0]
+	 */
 	synchronized void BoteaAskatu(int id) throws InterruptedException {
 		block = true;
 		pantaila.askatu(id);
 		notify();
 	}
-//when (i<BT) ik[IKR].sartu[s:1..BT-i] -> BOTEA[i+s][0][0]
+
+//	| when (i<BT && blok==1) ik[IKR].sartu[s:1..BT-i] -> BOTEA[i+s][0]
 	synchronized void BoteaBete(int zenbat, int id) throws InterruptedException {
 		int lekulibre = IkasleakApp.Edukiera_Max - unekop;
 		while (!(unekop + zenbat <= IkasleakApp.Edukiera_Max))
@@ -160,8 +183,8 @@ class Kontrolatzailea {
 		notify();
 
 	}
-//when (i>0)  ik[IKR].hartu[h:1..i]	 -> BOTEA[i-h][1][0]
 
+//	| when (i>0 && blok==1)  ik[IKR].hartu[h:1..i]	 -> BOTEA[i-h][0]
 	synchronized void BotetikHartu(int id, int zenbat) throws InterruptedException {
 		while (!(unekop > 0))
 			wait();
@@ -177,7 +200,8 @@ class Kontrolatzailea {
 		pantaila.sartubota(id, auk);
 		notify();
 	}
-//when (i>=JA)			 j.hartu[JA] 			 -> BOTEA[i-JA][0][0]
+
+//| when (i>=JA && blok==1)			 j.hartu[JA] 			 -> BOTEA[i-JA][0]
 	synchronized void AlokairuaHartu(int id) throws InterruptedException {
 		while (!(unekop >= IkasleakApp.Alokairua))
 			wait();
@@ -271,3 +295,4 @@ class Pantaila {
 		System.out.println("]");
 	}
 }
+

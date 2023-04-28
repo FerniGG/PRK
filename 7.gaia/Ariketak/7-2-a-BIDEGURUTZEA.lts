@@ -1,0 +1,53 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 27/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 7
+//   Arkieta Zenb : 2-b                         
+//   Arkieta Izena : Zebrabidea
+//   Enuntziatua : Zebrabide batetara iristean:
+//- Kotxeak zain geldituko dira oinezkoren bat pasatzen edo pasatzeko zain baldin badago.
+//- Oinezkoek, ordea, zain geldituko dira une horretan kotxe bat pasatzen ari bada, harrapatuak ez
+//izateko. Gainera ataskorki sor ez dadin, hiru kotxe baino gehiago zebrabidean sartzeko pilatzen
+//badira, oinezkoek ere itxarongo dute.
+//Modelatu FSP-a.
+const AM=3 //ataskoak ekiditzeko muga
+const KK=4 //Kotxe kopurua
+const OK=2 //Oinezkoen kopurua
+range KR=0..KK //Kotxeen rangoa
+range OR=0..OK //oinezkoen rangoa
+range OR1=1..OK
+range KR1=1..KK
+
+OINEZKOA = (iritzi->sartu->atera->OINEZKOA).
+KOTXEA = (iritzi->sartu->atera->KOTXEA).
+
+BIDEGURUTZEA=BIDEGURUTZEA[0][0][0][0],
+//ki= zenbat kotxe iritsi diren
+//ks= zenbat kotxe sartu diren
+//oi= zenbat oinezko iritsi diren
+//os= zenbat kotxe sartu diren
+BIDEGURUTZEA[ki:KR][ks:KR][oi:OR][os:OR] = 		(										o[OR1].iritzi->BIDEGURUTZEA[ki][ks][oi+1][os]
+												|										k[KR1].iritzi->BIDEGURUTZEA[ki+1][ks][oi][os]
+												|when	(ks==0 && ki<AM) 				o[OR1].sartu->BIDEGURUTZEA[ki][ks][oi-1][os+1]
+												|when	(oi==0 && os==0)				k[KR1].sartu->BIDEGURUTZEA[ki-1][ks+1][oi][os]
+												|										o[OR1].atera->BIDEGURUTZEA[ki][ks][oi][os-1]
+												|										k[KR1].atera->BIDEGURUTZEA[ki][ks-1][oi][os]
+
+).
+
+||ZEBRABIDEA = (o[OR1]:OINEZKOA || k[KR1]:KOTXEA || BIDEGURUTZEA).
+
+//Ariketa hau exekutatzean argi ikusten da 3 kotxe sartzen badira, 
+//ezin direla oinezkoak pasatu, eta kotxeak ateratzerakoan berriro 
+//sartu nahiko dira eta bukle batean sartuko gara
+//non oinezkoak ezin izango dute pasa.
+/*Trace to DEADLOCK:
+	o.1.iritzi
+	o.2.iritzi
+	k.1.iritzi
+	k.2.iritzi
+	k.3.iritzi
+	k.4.iritzi
+*/
