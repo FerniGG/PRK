@@ -1,0 +1,33 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 27/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 7
+//   Ariketa Zenb : 1-a                         
+//   Ariketa Izena : LIFOIlara  
+//   Enuntziatua :. LIFO pilaren arazoa soluzionatu, prozesu guztiak noizbait pilatik aterako direla ziurtatuz.
+//					Bizitasun propietatea bortxatzen dela ikusten dena.
+
+const IK=4 //Ikasle kopurua
+range IR=0..IK //Ikasleen rangoa
+const AT=2 //Arbelaren tamaina
+range AR=0..AT//Arbelaren posizioen rangoa
+range BOOL = 0..1
+IK = ( eskuaAltxatu->arbeleraJoan[i:AR]-> ariketaEgin-> ariketaAmaitu[i] -> IK).
+IRAK = (ir.sartzenUtzi->IRAK).
+//k: Arbelean une honetan dauden prozesu kopurua
+ARBELA=ARBELA[0][0],
+ARBELA[k:AR][a:BOOL]=	(when (k<AT && a==0) ir.sartzenUtzi->ARBELA[k+1][1]
+				|when (a==1) arbeleraJoan[k] -> ARBELA[k][0]
+ 				| when (k>0) ariketaAmaitu[k-1] -> ARBELA[k-1][a]
+).
+||ARIKETA_KLASEA= ( ik[IR]:IK||ir:IRAK|| ik[IR]::ARBELA|| ir::ARBELA).
+
+||ARIKETA_KLASEA_BISITASUNA= (ARIKETA_KLASEA)<<{ik[IR].arbeleraJoan[AR]}.
+
+//Hemen sartu prozesuari lehentasuna eman diogu, orduan
+//lehenik eta behin pila beteko da eta azkeneko prozesua aterako da,
+// atera lehentasun gutxiago duenez eta itxaroten daudenak eta orain aterakoak
+//sartu nahi dira eta lehentasuna gatik hauetako bat sartuko da eta bukle batean sartuko gara.
+// hau javan egingo dugu aterako sleep a handiago egiten
