@@ -2,6 +2,7 @@ package A4.AsmaBlok;
 
 import java.util.Random;
 
+
 //////////////////////////////////////////////////
 ///   Egilea: Fernando Gonzalez                ///
 ///   Data : 2/04/2023                        ///
@@ -15,10 +16,8 @@ import java.util.Random;
 //				Bide hori libre badago martzan jarriko da. eta Uneko bidea libratuko du.
 // 				Bidegurutzera heltzerakoan helmuga bidea aukeratuko du berriro.
 
-//BLOKEATU BEHAR DA SARTZEN DIREN KOTXE GUZTIAK HELMUGA AUKERATZEN DUTENEAN
-
-public class RotondaApp {
-	public final static int N = 5;
+public class A4RotondaApp {
+	public final static int N = 4;
 
 	public static void main(String args[]) {
 		Pantaila pant = new Pantaila(N);
@@ -34,7 +33,8 @@ public class RotondaApp {
 	}
 }
 
-
+/*KOTXEA = (gelditu->unekoa.okupatu ->helmuga.okupatu->MARTXAN),
+MARTXAN = (martxan->unekoa.libratu->helmuga.libratu->atera->KOTXEA).*/
 class Kotxea extends Thread {
 	Pantaila pant;
 	String space;
@@ -59,12 +59,12 @@ class Kotxea extends Thread {
 	private Bidea auzasBidea() {
 		int auk=this.unekoId;
 		while(auk==this.unekoId) {
-			auk = getRandomNumberInRange(0, RotondaApp.N-1);
+			auk = getRandomNumberInRange(0, A4RotondaApp.N-1);
+				
 		}
 		this.helmId=auk;
 		return this.Rotonda[auk];
 	}
-
 	private static int getRandomNumberInRange(int min, int max) {
 
 		Random r = new Random();
@@ -73,7 +73,7 @@ class Kotxea extends Thread {
 	}
 
 	public void itxaron() throws InterruptedException {
-		sleep(getRandomNumberInRange(1, 10) * 100);
+		sleep((long) (Math.random()* 5000));
 	}
 	public void run() {
 		try {
@@ -143,12 +143,10 @@ class Pantaila {
 		System.out.print("Bideak\t|\t");
 		for (int i = 0; i < kop; ++i)
 			System.out.print("K[" + i + "]\t\t");
-		System.out.println("Udaltzaina");
-		this.hasieratuGurutzea();
-		System.out.print("========|========");
+		System.out.println("");
 		for (int i = 0; i < kop; ++i)
 			System.out.print("================");
-		System.out.println("========|========");
+		System.out.println("================");
 		
 	}
 
@@ -169,29 +167,29 @@ class Pantaila {
 
 	public synchronized void idatziGurutzea(int[] eser, int kop) {
 		String gurutzea = "[";
-		for (int i = 0; i < RotondaApp.N-1; i++) {
+		for (int i = 0; i < A4RotondaApp.N-1; i++) {
 			if (eser[i] == 1) {
 				gurutzea += "*,";
 			} else {
 				gurutzea += "_,";
 			}
 		}
-		if (eser[RotondaApp.N-1] == 1) {
+		if (eser[A4RotondaApp.N-1] == 1) {
 			gurutzea += "*";
 		} else {
 			gurutzea += "_";
 		}
 		gurutzea += "]  Kop=" + kop;
-		this.idatzi(RotondaApp.N, gurutzea);
+		this.idatzi(A4RotondaApp.N, gurutzea);
 	}
 
 	public synchronized void hasieratuGurutzea() {
 		String gurutzea ="[0";
-		for (int i = 1; i < RotondaApp.N; i++) {
+		for (int i = 1; i < A4RotondaApp.N; i++) {
 			gurutzea += ","+i;
 		}
 		gurutzea += "]";
-		this.idatzi(RotondaApp.N, gurutzea);
+		this.idatzi(A4RotondaApp.N, gurutzea);
 	}
 
 }
