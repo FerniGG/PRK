@@ -1,0 +1,31 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 27/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 7
+//   Ariketa Zenb : 1-a                         
+//   Ariketa Izena : LIFOIlara  
+//   Enuntziatua :. LIFO pilaren arazoa soluzionatu, prozesu guztiak noizbait pilatik aterako direla ziurtatuz.
+//					Bizitasun propietatea bortxatzen dela ikusten dena.
+
+const PK=4 //Prozesu kopurua
+range PR=1..PK //Prozesuen indizeak
+const FK=3 //Lifoaren tamaina
+range FR=0..FK-1 //Lifoaren posizioak
+range FKR=0..FK //Lifoan egon daitezkeen prozesu kopurua
+P = ( sartu[x:FR] -> atera[x] -> P).
+//k: LIFOan une honetan dauden prozesu kopurua
+LIFO=LIFO[0],
+LIFO[k:FKR]=(when (k<FK) sartu[k] -> LIFO[k+1]
+ 				| when (k>0) atera[k-1] -> LIFO[k-1]
+).
+||SISTEMA = ( p[PR]:P|| p[PR]::LIFO).
+
+||SISTEMA_A= (SISTEMA)<<{p[PR].sartu[FR]}.
+
+//Hemen sartu prozesuari lehentasuna eman diogu, orduan
+//lehenik eta behin pila beteko da eta azkeneko prozesua aterako da,
+// atera lehentasun gutxiago duenez eta itxaroten daudenak eta orain aterakoak
+//sartu nahi dira eta lehentasuna gatik hauetako bat sartuko da eta bukle batean sartuko gara.
+// hau javan egingo dugu aterako sleep a handiago egiten

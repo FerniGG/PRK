@@ -1,0 +1,28 @@
+const N = 3
+range T = 0..N
+range ID = 1..N
+
+KOTXEA = (eskatu->sartu->irten->KOTXEA).
+
+ORDENEAN = ORD[1][1],
+ORD[s:ID][i:ID]= ( [s].sartu -> ORD[s%N+1][i]
+				 | [i].irten -> ORD[s][i%N+1] ).
+
+||KONBOI = ([ID]:KOTXEA||ORDENEAN).
+
+|| KOTXEAK =(gorria:KONBOI||urdina:KONBOI ).
+
+ZUBIA = ZUBIA[0][0][0][0],
+ZUBIA[kg:T][ku:T][zg:T][zu:T] = 
+		(						gorria[ID].eskatu 	-> ZUBIA[kg] [ku] [zg+1][zu]
+		|when (ku==0 && zu==0) 	gorria[ID].sartu	-> ZUBIA[kg+1][ku] [zg-1][zu]
+		|						gorria[ID].irten	-> ZUBIA[kg-1][ku] [zg] [zu]
+		|						urdina[ID].eskatu	-> ZUBIA[kg] [ku] [zg] [zu+1]
+		|when (kg==0 && zg==0) 	urdina[ID].sartu	-> ZUBIA[kg] [ku+1][zg] [zu-1]
+		|						urdina[ID].irten	-> ZUBIA[kg] [ku-1][zg] [zu]
+).
+
+||KOTXEAKZUBIAN =(gorria:KONBOI||urdina:KONBOI||ZUBIA).
+
+
+||ZUBIABETETA = (KOTXEAKZUBIAN) >>{{gorria[ID],urdina[ID]}.irten}.

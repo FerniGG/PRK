@@ -1,0 +1,86 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 13/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 9
+//   Ariketa Zenb : 1                          
+//   Ariketa Izena : Praktika- Jolas Parkea
+//   Enuntziatua : Jolas parke baten errepresentazio konkurrentea
+//					Bi ilara egongo dira bata VIP  eta bestea normala,
+//					banako bakoitza parkera sartu baino lehen VIP pasea edo ez erosi dezake
+//					pase hori badauka VIP ilarara joan daiteke, bestela normalera joango da
+//					Errusiar mendi-batera sartuko dira ordenean koordinatzaileak 
+//					VIP ilaran daudenei utziko dio pasatzen, ilara horretarako 
+//					eserleku totalen %20-a jada erreserbatuta daudelako, baina 
+//					VIP hainbeste ez badaude ilara normaleko 
+//					jendea eseri daiteke eserleku horietan.
+//					Aldiz, VIP eserlekuak betetzerakoan ilara normaleko pertsonak sartuko dira.
+//					Jendea sartzeko epe denbora bat egongo da, horretarako aldiunero 
+//					koordinatzailea begiratu behar du mendiaren egoera, non beteta
+//					beteta badago, edo itxarote denbora amaitzerakoan 
+//					ez bestelakorik pasatzen utzi behar, eta 
+//					errusiar m endia bere ibilbidea egingo du.
+//					
+//					Ibilbidea amaitzerakoan jendea diren ordenean aterako dira,
+//					eta momentu hortan aukeratuko dute ea argazkiak hartu nahi duten edo ez
+//					argazkiak ez badute nahi parketik aterako dira,
+//					aldiz argazkiak nahi badute, argazkiak ematen duten tokira joango dira,
+//					ilara egingo dute berriz (hemen ez dago preferentziarik) 
+//					eta dendariak argazkiak emango dizkio
+//					ondoren parketik aterako dira.
+
+const ME = 3 // Errusiar mendiaren eduki maximoa
+range MR = 0..ME // Errusiar mendiaren edukiaren rangoa
+const MV=1 //Errusiar mendian zenbat eserleku vip entzar diren.
+const PK = 3 // Parkean egon daitezkeen pertsona kop
+range PR = 0..PK // Pertsona kopuruen rangoa
+const IE = 2 // Ilaren tamaina maximoa
+range IR=0..IE  // Ilararen edukiaren rangoa
+range BOOL= 0..1 // Zenbaki boolearren rangoa
+range M_EGOERAK=0..3//Mendiaren egoeren rangoa
+
+PERTS=(ticketaErosi[b:BOOL]->		if(b==1) then (sartuIlaraVIP[p:IR] -> ateraIlaraVIP[p] -> desblokIlaraVIP ->jaitziAtrakziotik->PERTS)
+												 else(sartuIlaraNORMAL[p:IR] -> ateraIlaraNORMAL[p] -> desblokIlaraNORMAL ->jaitziAtrakziotik->PERTS)
+).
+
+
+KOORD_MENDIA=(ateaItxi->martxanJarri->gelditu->ateaIreki->KOORD_MENDIA).
+
+//MENDIA
+//k: ILARAn une honetan dauden pertsona kopurua
+//s: pertsona bat sartzen bada, zein posizioan sartu behar den
+//a:pertsona bat ateratzen bada, zein posizioan sartu behar den
+//ablok: ateratzeko blokeoa
+//km: mendian dauden pertsona kopurua
+//e: mendiaren uneko egoera 0 geldi matxan baino lehen 1 martxan 2 geldituta martxa ostean
+
+MENDIA=MENDIA[0][0][0][0][0][0][0][0][0][0],
+MENDIA[kv:IR][sv:IR][av:IR][ablokv:BOOL][kn:IR][sn:IR][an:IR][ablokn:BOOL][km:MR][kmv:MR][e:M_EGOERAK]=
+									//VIP Ilara beteta ez badago
+									(when (kv<IE && e==0) 													p[PR].sartuIlaraVIP[sv]-> MENDIA[kv+1][(sv+1)%IE][av][ablokv][kn][sn][an][ablokn][km][kmv][e]
+									//NORMAL Ilara beteta ez badago
+ 									|when (kn<IE && e==0) 											p[PR].sartuIlaraNORMAL[sn]-> MENDIA[kv][sv][av][ablokv][kn+1][(sn+1)%IE][an][ablokn][km][kmv][e]
+									//VIP bat badago atera nahi dena non, vip eserlekua duen edo arrunten ilara hutsik badago eta lekua badago, eta  ilara desblokeatuta badago eta mendia geldituta baino lehen fasean badago
+									|when ((km<MV || ( kn==0 && km<ME  )) && ablokv==0 && e==0) 	p[PR].ateraIlaraVIP[av] -> MENDIA[kv-1][sv][(av+1)%IE][1][kn][sn][an][ablokn][km+1][kmv+1][e]
+									//NORMAL bat badago atera nahi dena non, mendian lekua badago , eta  ilara desblokeatuta badago eta mendia geldituta baino lehen fasean badago
+									|when ((km<ME && ( kv==0 || km>=MV )) && ablokn==0 && e==0) 	p[PR].ateraIlaraNORMAL[an] -> MENDIA[kv][sv][av][ablokv][kn-1][sn][(an+1)%IE][1][km+1][kmv][e]
+									//VIP ilara blokeatuta badago eta jada atrakziora igo bada
+									|when(ablokv==1)												p[PR].desblokIlaraVIP  -> MENDIA[kv][sv][av][0][kn][sn][an][ablokn][km][kmv][e]
+									//NORMAL ilara blokeatuta badago eta jada atrakziora igo bada
+									|when(ablokn==1)												p[PR].desblokIlaraNORMAL  -> MENDIA[kv][sv][av][ablokv][kn][sn][an][0][km][kmv][e]
+									//MENDIA beteta badago eta pertsonak sartzeko fasean bagaude
+									|when (km==ME && e==0)											koord_m.ateaItxi->MENDIA[kv][sv][av][ablokv][kn][sn][an][ablokn][km][kmv][1]
+									//MENDIKO martxa fasean eta jada martxan jarri bada
+									|when (e==1)													koord_m.gelditu->MENDIA[kv][sv][av][ablokv][kn][sn][an][ablokn][km][kmv][2]
+									//Mendia ateratzeko fasean bada eta pertsonak barruan badaude oraindik
+									|when (e==2 && km>0)											p[PR].jaitziAtrakziotik->MENDIA[kv][sv][av][ablokv][kn][sn][an][ablokn][km-1][kmv][e]
+									//MENDIA atera fasean badago eta pertsonarik ez badaude barnean
+									|when (e==2 && km==0)											koord_m.ateaIreki->MENDIA[kv][sv][av][ablokv][kn][sn][an][ablokn][km][0][0]
+
+).
+
+
+||PARKE_TEMATIKOA=(p[PR]:PERTS || koord_m:KOORD_MENDIA || MENDIA ).
+
+

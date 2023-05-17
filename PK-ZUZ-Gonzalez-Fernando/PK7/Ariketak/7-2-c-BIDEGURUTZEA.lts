@@ -1,0 +1,58 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 27/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 7
+//   Arkieta Zenb : 2-c                         
+//   Arkieta Izena : Zebrabidea
+//   Enuntziatua : Zebrabide batetara iristean:
+//- Kotxeak zain geldituko dira oinezkoren bat pasatzen edo pasatzeko zain baldin badago.
+//- Oinezkoek, ordea, zain geldituko dira une horretan kotxe bat pasatzen ari bada, harrapatuak ez
+//izateko. Gainera ataskorki sor ez dadin, hiru kotxe baino gehiago zebrabidean sartzeko pilatzen
+//badira, oinezkoek ere itxarongo dute.
+//Modelatu FSPz, aurreko atalean sortzen den elkar-blokeaketa soluzionatuz baina ahalik eta
+//gutxien aldatuz. Check Safety erabiliz, ziurtatu konpondu dela arazoa.
+const AM=3 //ataskoak ekiditzeko muga
+const AB=6 //bizitasuna ekiditzeko muga
+range BR = 0..AB //Bizitasun propietatea ekiditzeko rangoa
+const KK=4 //Kotxe kopurua
+const OK=2 //Oinezkoen kopurua
+range KR=0..KK //Kotxeen rangoa
+range OR=0..OK //oinezkoen rangoa
+range OR1=1..OK
+range KR1=1..KK
+
+OINEZKOA = (iritzi->sartu->atera->OINEZKOA).
+KOTXEA = (iritzi->sartu->atera->KOTXEA).
+
+BIDEGURUTZEA=BIDEGURUTZEA[0][0][0][0][0],
+//ki= zenbat kotxe iritsi diren
+//ks= zenbat kotxe sartu diren
+//oi= zenbat oinezko iritsi diren
+//os= zenbat kotxe sartu diren
+BIDEGURUTZEA[ki:KR][ks:KR][oi:OR][os:OR][it:BR] = 	(												o[OR1].iritzi->BIDEGURUTZEA[ki][ks][oi+1][os][it]
+													|												k[KR1].iritzi->BIDEGURUTZEA[ki+1][ks][oi][os][it]
+													|when	(ks==0 && (ki<AM || it>=AB)) 			o[OR1].sartu->if (oi-1 == 0) then BIDEGURUTZEA[ki][ks][oi-1][os+1][0]
+																												else BIDEGURUTZEA[ki][ks][oi-1][os+1][it]
+													|when	(((oi==0 || ki>=AM) && it<AB) && os==0)	k[KR1].sartu->BIDEGURUTZEA[ki-1][ks+1][oi][os][it+1]
+													|												o[OR1].atera->BIDEGURUTZEA[ki][ks][oi][os-1][it]
+													|												k[KR1].atera->BIDEGURUTZEA[ki][ks-1][oi][os][it]
+
+).
+/*//k: LIFOan une honetan dauden prozesu kopurua
+//i: zenbat prozesu sartu diren adierazten duen kontagailua.
+
+LIFO=LIFO[0][0],
+LIFO[k:FKR][i:BR]=(when (k<FK && i<B) sartu[k] -> LIFO[k+1][i+1]
+ 				| when (k>0) atera[k-1] -> if(k-1==0) then LIFO[0][0]
+											else LIFO[k-1][i]
+).*/
+
+||ZEBRABIDEA = (o[OR1]:OINEZKOA || k[KR1]:KOTXEA || BIDEGURUTZEA).
+||ZEBRABIDEA_BLOK_GABE = (ZEBRABIDEA)<<{{o[OR1],k[KR1]}.iritzi}.
+
+
+//Aldaketa hauekin bizitasun propietatea ekidituko dugu Lifo ariketan bezala kotxeak sartzean kontagailu bat inkrementatuko da eta
+//nire kasuan 6-ra heltzean oinezko guztiak sartuko dira bidean eta guztiak sartu arte kontagailu hori 0 ra hasieratuko dugu.
+//honela oinezkoak eta kotxeak txandakatuko dira.

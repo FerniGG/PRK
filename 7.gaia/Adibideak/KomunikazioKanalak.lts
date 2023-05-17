@@ -1,0 +1,38 @@
+const IkK=3
+const IrK=2
+range IkR=0..IkK-1
+range IrR=0..IrK-1
+range Bool=0..1
+
+IKAS = (sartu -> BEGIRATU[0] ),
+BEGIRATU[x:IrR] = ( k[x].begiratu[okup:Bool] ->
+                      if (okup==1) then (k[x].desblokeatu -> BEGIRATU[(x+1)%IrK]) 
+                                   else SEGI[x] ),
+SEGI[x:IrR] = ( k[x].eskuratu -> k[x].galdetu -> k[x].erantzunaJaso -> k[x].askatu -> IKAS).
+
+IRAK = ( galderaJaso -> erantzun -> IRAK).
+
+//b:blokeatuta  //o:okupatuta  //g:galdera eginda  //e:erantzuna emanda
+KANALA = KANALA[0][0][0][0],
+KANALA[b:Bool][o:Bool][g:Bool][e:Bool] =  
+	(	when (b==0)	ik[IkR].begiratu[o]   	-> KANALA[1][o][g][e]
+	|				ik[IkR].desblokeatu   	-> KANALA[0][o][g][e]
+    |  	when (o==0)	ik[IkR].eskuratu      	-> KANALA[0][1][g][e]
+    |  				ik[IkR].galdetu      	-> KANALA[b][o][1][e]
+    |  	when (g==1)	ir[IrR].galderaJaso    	-> KANALA[b][o][0][e]
+    |  				ir[IrR].erantzun      	-> KANALA[b][o][g][1]
+    |  	when (e==1)	ik[IkR].erantzunaJaso   -> KANALA[b][o][g][0]
+	|             	ik[IkR].askatu			-> KANALA[b][0][g][e]
+//	| 				egoera[b][o]			-> KANALA[b][0][g][e]
+).
+
+||SIST= ( ik[IkR]:IKAS ||  forall[i:IrR] ( ir[i].k[i]:IRAK || k[i]:KANALA )
+        )/{	ik[IkR].k[x:IrR].begiratu[b:Bool]/k[x].ik[IkR].begiratu[b],
+			ik[IkR].k[x:IrR].desblokeatu/k[x].ik[IkR].desblokeatu,
+			ik[IkR].k[x:IrR].eskuratu/k[x].ik[IkR].eskuratu,
+			ik[IkR].k[x:IrR].galdetu/k[x].ik[IkR].galdetu,
+			ik[IkR].k[x:IrR].erantzunaJaso/k[x].ik[IkR].erantzunaJaso,
+			ik[IkR].k[x:IrR].askatu/k[x].ik[IkR].askatu,
+			ir[x:IrR].k[x].galderaJaso/k[x].ir[IrR].galderaJaso,
+			ir[x:IrR].k[x].erantzun/k[x].ir[IrR].erantzun
+		  }.

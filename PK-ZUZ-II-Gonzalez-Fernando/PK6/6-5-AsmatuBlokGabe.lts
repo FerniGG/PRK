@@ -1,0 +1,24 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 2/04/2023                        ///
+//////////////////////////////////////////////////
+
+//Gai Zenb : 6
+//Ariketa Zenb : 5                        
+//Ariketa Izena : AsmatutakoProblemaBlokeoaGabe
+//Enuntziatua : Bidegurutze bat daukagun non kotxea gurutzera heltzen da.
+//				Bidegurutzera sartzerakoanan helmuga aurreko bidea izango da.
+//				Bide hori libre badago martxan jarriko da, eta lehenengo
+		//		bidegurutzearen zentroan geratuko da eta bere bidea libratuko du
+	//			azkenik helmuga libre badago horra joango da atera baino lehen
+//				helmuga bidea libratuko du.
+// 				Bidegurutzera heltzerakoan helmuga bidea aukeratuko du berriro.
+
+const N=5
+range R=0..N-1
+
+BIDEA = BIDEA[0],
+BIDEA[h:0..1] = (when (h==0) okupatu->BIDEA[1]
+ 							| libratu->BIDEA[0]).
+KOTXEA = (gelditu->unekoa.okupatu ->unekoa.libratu->gurutzearenZentrora->helmuga.okupatu->helmuga.libratu->atera->KOTXEA).
+||BIDEGURUTZEA=  ( forall [i:R] ( k[i]:KOTXEA|| forall [j:R] ({k[i].unekoa,k[j].helmuga}::BIDEA))).

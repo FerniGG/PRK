@@ -1,0 +1,43 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 25/03/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 5.2
+//   Ariketa Zenb : 6                         
+//   Ariketa Izena : Tutoretzak  
+//   Enuntziatua : Tutoretzak (FSPz modelatu eta Java-z inplementatu):
+//                 Ikasleek azterketa garaian ikasten egoten dira (suposatzen da).
+//                 Zerbait ez badute ulertzen irakaslearen bulegora joaten dira, bulegoan sartu,
+//                 galdera egin eta erantzuna jaso ondoren bulegotik ateratzen dira, berriz ikastera joateko.
+
+//                 Irakasleak, ikasle batek galdera bat egiten dionean, erantzun baino lehen
+//                 pentsatu egiten du (suposatzen da). Gainera irakaslea, nahiko berezia denez,
+//                 tutoretzetarako ondoko arauak ditu:
+//                 • Bulegoan bi ikasle batera egon daitezke, baina ez gehiago.
+//                 • Ikasle batek egin duen galdera erantzun arte beste ikaslerik ezin du galdetu.
+//                 • Ikaslea bulegotik irten ahalko du (soilik) irakaslearen erantzuna jaso ondoren.
+//                 • Ikasle bakoitzak galdera bakar bat egin dezake tutoretza bakoitzean.
+//                 • Bulegoan sartzeko eta galdera egiteko ez da errespetatzen aurretik zein zegoen.
+
+
+const N=2 //gelaren tamaina
+range R=0..N //gelaren rangoa
+const PK=5 //ikasle kop
+range PR=0..PK //ikasleen rangoa
+range BOOL=0..1//blokeoaren rangoa
+IK = (sartu->galdetu->erantzunaJaso->atera->IK).
+IR=(pentsatu->erantzun->IR).
+
+//Gela
+//k: gelan daduden ikasle kop
+//g: galdera bat egin den edo ez
+//e: erantzuna eman den edo ez
+GELA=GELA[0][0][0],
+GELA[k:R][g:BOOL][e:BOOL]= 	(when(k<N) 			ik[PR].sartu->GELA[k+1][g][e]
+						   	|when(g==0) 		ik[PR].galdetu->GELA[k][1][e]
+							|when(g==1 && e==0)	ir.pentsatu->ir.erantzun->GELA[k][g][1]
+							|when(e==1 && g==1) ik[PR].erantzunaJaso->GELA[k][0][0]
+							|ik[PR].atera->GELA[k-1][0][0]
+).
+||TUTORETZA=(ik[PR]:IK || ir:IR || GELA).

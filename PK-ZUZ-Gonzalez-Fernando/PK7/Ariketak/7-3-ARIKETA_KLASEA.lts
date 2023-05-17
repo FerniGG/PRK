@@ -1,0 +1,33 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 27/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 7
+//   Ariketa Zenb : 1-c
+//   Ariketa Izena : Ariketa klasea
+/*   Enuntziatua : Problema bat asmatu
+				● bizitasun propietateei buruz hausnartzeko aukera ematen duena.
+				● FSP soluzioa desberdinak eman
+				● bermatuz azken bertsioan segurtasun eta bizitasun propietateak ez
+				direla bortxatzen.
+				● Azken bertsioa Javaz inplementatu
+*/
+const IK=3 //Ikasle kopurua
+range IR=1..IK //Ikasleen rangoa
+const AT=2 //Arbelaren tamaina
+range AR=0..AT//Arbelaren posizioen rangoa
+range BOOL = 0..1
+IKAS = ( arbeleraJoan[i:AR]-> ariketaEgin-> ariketaAmaitu[i] -> IKAS).
+IRAK = (sartzenUtzi->IRAK).
+//k: Arbelean une honetan dauden prozesu kopurua
+ARBELA=ARBELA[0][0],
+ARBELA[k:AR][a:BOOL]=	(when (a==0) 			ir.sartzenUtzi->ARBELA[k][1]
+						|when (k<AT && a==1) 	ik[IR].arbeleraJoan[k] -> ARBELA[k+1][a]
+ 						| when (k>0) 			ik[IR].ariketaAmaitu[k-1] -> if(k-1==0) then ARBELA[k-1][0]
+																	else ARBELA[k-1][a]
+).
+||ARIKETA_KLASEA=(ik[IR]:IKAS || ir:IRAK || ARBELA).
+
+||ARIKETA_KLASEA_BISITASUNA= (ARIKETA_KLASEA)<<{ik[IR].arbeleraJoan[AR]}.
+

@@ -1,0 +1,27 @@
+const N = 3
+range T = 0..N
+range ID = 1..N
+// kotxe mota bakoitzeko kopurua
+// kotxe kontagailuaren mota
+// kotxeen zenbakiak
+KOTXEA = (sartu->irten->KOTXEA).
+
+ORDENEAN = ORD[1][1],
+ORD[s:ID][i:ID]= ( [s].sartu -> ORD[s%N+1][i]
+				 | [i].irten -> ORD[s][i%N+1] ).
+
+||KONBOI = ([ID]:KOTXEA||ORDENEAN).
+
+|| KOTXEAK =(gorria:KONBOI||urdina:KONBOI ).
+
+ZUBIA = ZUBIA[0][0],
+ZUBIA[kg:T][ku:T] =	(when (ku==0) 	gorria[ID].sartu -> ZUBIA[kg+1][ku]
+					|				gorria[ID].irten -> ZUBIA[kg-1][ku]
+					|when (kg==0) 	urdina[ID].sartu -> ZUBIA[kg] [ku+1]
+					|				urdina[ID].irten -> ZUBIA[kg] [ku-1]  ).
+
+||KOTXEAKZUBIAN =(gorria:KONBOI||urdina:KONBOI||ZUBIA).
+
+
+
+||ZUBIABETETA = (KOTXEAKZUBIAN) >>{{gorria[ID],urdina[ID]}.irten}.

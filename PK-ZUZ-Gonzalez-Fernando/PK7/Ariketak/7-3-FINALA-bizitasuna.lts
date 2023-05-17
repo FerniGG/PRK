@@ -1,0 +1,40 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 30/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 7
+//   Ariketa Zenb : 3                        
+//   Ariketa Izena : ChampionsLeagueFinala 
+/*   Enuntziatua :2 futbol  talde daude jokatzen hasieran lokala pilota hartuko du, 
+					haien jokalariek lehenik eta behin pasatu beharra edo bota beharra erabakiko du
+					eta tiroa bota badu pilota atean sartu edo kanpora joan jaiteke, azken bi hauetan, 
+					pilota beste taldeak bereganatuko du.
+	
+*/
+const N=2 //talde kop tamaina
+range TR=0..N-1//taldeen indizeak
+range EG=0..2 //Zelaian dauden egoera posibleak rangoa
+range BOOL=0..1//balio boolearren rangoa.
+
+FUT=(pilotaHartu->erabPasa[p:BOOL]->if(p==1) then (pasatu->FUT)
+								 	else(erabBota[b:BOOL]->	if(b==1) then (gola->FUT)
+								 							else(kanpora->FUT))
+).
+//ZELAIA
+// t:Zein taldea duen baloia.
+ZELAIA=ZELAIA[0],
+ZELAIA[t:TR]=	(ft[t].pilotaHartu->ZELAIA[t]
+				|ft[t].pasatu->ZELAIA[t]
+				|ft[t].gola->ZELAIA[(t+1)%N]
+				|ft[t].kanpora->ZELAIA[(t+1)%N]
+
+).
+
+||PARTIDUA=(ft[TR]:FUT || ZELAIA).
+||PARTIDUA_BIZITASUNA = (PARTIDUA)<<{{ft[TR]}.erabPasa[1]}.
+
+/*
+Azalpena: Lehentasuna eman diogunez erabPasa[1] egoerari, beti geratuko da lehenengo taldea haien artean pilota pasatzen.
+			, eta beste taldeak ez du pilota inoiz edukiko.
+*/

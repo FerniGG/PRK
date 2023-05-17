@@ -1,0 +1,22 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 2/04/2023                        ///
+//////////////////////////////////////////////////
+
+//Gai Zenb : 6
+//Ariketa Zenb : 4                        
+//Ariketa Izena : AsmatutakoProblemaBlokeoaGabe
+//Enuntziatua : Bidegurutze bat daukagun non kotxea gurutzera heltzen da.
+//				Bidegurutzera sartzerakoanan helmuga bidea aukeratuko du(unekoa ezin da izan).
+//				Bide hori libre badago martzan jarriko da. eta Uneko bidea libratuko du.
+// 				Bidegurutzera heltzerakoan helmuga bidea aukeratuko du berriro.
+
+//BLOKEATU BEHAR DA SARTZEN DIREN KOTXE GUZTIAK HELMUGA AUKERATZEN DUTENEAN
+const N=4
+range R=0..N
+
+BIDEA = BIDEA[0],
+BIDEA[h:0..1] = (when (h==0) okupatu->BIDEA[1]
+ 							| libratu->BIDEA[0]).
+KOTXEA = (gelditu->unekoa.okupatu ->unekoa.libratu->helmuga.okupatu->helmuga.okupatu->atera->KOTXEA).
+||BIDEGURUTZEA=  ( forall [i:R] ( k[i]:KOTXEA ||{k[i].unekoa,k[j:R].helmuga}::BIDEA)).

@@ -1,0 +1,58 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 13/04/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 9
+//   Ariketa Zenb : 1                          
+//   Ariketa Izena : Praktika- Jolas Parkea
+//   Enuntziatua : Jolas parke baten errepresentazio konkurrentea
+//					Bi ilara egongo dira bata VIP  eta bestea normala,
+//					banako bakoitza parkera sartu baino lehen VIP pasea edo ez erosi dezake
+//					pase hori badauka VIP ilarara joan daiteke, bestela normalera joango da
+//					Errusiar mendi-batera sartuko dira ordenean koordinatzaileak 
+//					VIP ilaran daudenei utziko dio pasatzen, ilara horretarako 
+//					eserleku totalen %20-a jada erreserbatuta daudelako, baina 
+//					VIP hainbeste ez badaude ilara normaleko 
+//					jendea eseri daiteke eserleku horietan.
+//					Aldiz, VIP eserlekuak betetzerakoan ilara normaleko pertsonak sartuko dira.
+//					Jendea sartzeko epe denbora bat egongo da, horretarako aldiunero 
+//					koordinatzailea begiratu behar du mendiaren egoera, non beteta
+//					beteta badago, edo itxarote denbora amaitzerakoan 
+//					ez bestelakorik pasatzen utzi behar, eta 
+//					errusiar m endia bere ibilbidea egingo du.
+//					
+//					Ibilbidea amaitzerakoan jendea diren ordenean aterako dira,
+//					eta momentu hortan aukeratuko dute ea argazkiak hartu nahi duten edo ez
+//					argazkiak ez badute nahi parketik aterako dira,
+//					aldiz argazkiak nahi badute, argazkiak ematen duten tokira joango dira,
+//					ilara egingo dute berriz (hemen ez dago preferentziarik) 
+//					eta dendariak argazkiak emango dizkio
+//					ondoren parketik aterako dira.
+
+
+
+const N=1 //dendaren tamaina
+range R=0..N //dendaren rangoa
+const PK=5 //pertsona kop
+range PR=0..PK //pentsonen rangoa
+range BOOL=0..1//blokeoaren rangoa
+
+PERTS_ARG=(argazkiaNagu[b:BOOL]->		if(b==1) then (dendaraSartu-> argazkiaEskatu-> argazkiaHartu ->parketikAtera->PERTS_ARG)
+												 else(parketikAtera->PERTS_ARG)
+).
+ARGAZKI_KOORD=(argazkiaImprimatu->argazkiaEman->ARGAZKI_KOORD).
+
+//Denda
+//k: dendan pertsona bat dagoen edo ez
+//i: argazkia imprimatzen ari den edo ez
+//e: argazkia eman den edo ez
+DENDA=DENDA[0][0][0],
+DENDA[k:BOOL][i:BOOL][e:BOOL]= 	(when(k==0) 		p[PR].dendaraSartu->DENDA[1][i][e]
+						   		|when(i==0) 		p[PR].argazkiaEskatu->DENDA[k][1][e]
+								|when(i==1 && e==0)	a_koord.argazkiaImprimatu->a_koord.argazkiaEman->DENDA[k][i][1]
+								|when(e==1 && i==1) p[PR].argazkiaHartu->DENDA[k][0][0]
+								|					p[PR].parketikAtera->DENDA[0][0][0]
+).
+||TUTORETZA=(p[PR]:PERTS_ARG || a_koord:ARGAZKI_KOORD || DENDA).
+

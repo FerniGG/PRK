@@ -1,0 +1,34 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 2/04/2023                        ///
+//////////////////////////////////////////////////
+
+//Gai Zenb : 6
+//Ariketa Zenb : 5                        
+//Ariketa Izena : AsmatutakoProblemaBlokeoaGabe
+//Enuntziatua : 
+/*
+					AZALPENA: ez dakidanez zelan gorde parametro bezala ausaz aukeratutako bidea helmuga bezala
+								hemen alboko bidea esleituko diot helmuga bezala eta JAVAn bi .jar izango ditut alboko bidea izanda helmuga bezala eta  auzas aukeratutakoa.
+								Honela egingo dut FSP ondo dabilela ziurtatzeko.
+*/
+
+//				Bidegurutze bat daukagun non kotxea gurutzera heltzen da eta bere bidea okupatuko du.
+//				uneko bidea okupatu ostean helmuga bidea aukeratuko du(unekoa ezin da izan) eta okupatuko du libre baldin badago.
+//				Bide hori okupatu eta gero martzan jarriko da. eta Uneko bidea eta helmuga libratuko du orden horretan, ondoren gurutzetik ateratzeko.
+/*azalpena: ariketa honetan exekuzio puntu batera heltzerakoan, ezingo dute eragiketarik egin 
+hari guztiak elkarblokeatuta dagoelako.
+kasu honetan elkarblokeatuko dira kotxe guztiak haien bidean gelditzen badira edozein helmuga okupatu baino lehen.
+
+No deadlocks/errors
+*/
+
+const N=4
+range R=0..N-1
+range BOOL=0..1
+
+BIDEA = BIDEA[0],
+BIDEA[h:0..1] = (when (h==0) okupatu->BIDEA[1]
+ 							| libratu->BIDEA[0]).
+KOTXEA = (gelditu->unekoa.okupatu->unekoa.libratu->martxanZentrora->helmuga.okupatu->helmuga.libratu->atera->KOTXEA).
+||BIDEGURUTZEA=  ( forall [i:R] ( k[i]:KOTXEA|| {k[i].unekoa,k[(i+1)%N].helmuga}::BIDEA)).

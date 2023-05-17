@@ -1,0 +1,55 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 24/02/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 5.1
+//   Ariketa Zenb : 4                  
+//   Ariketa Izena : Ikasleak
+//   Enuntziatua : Ikasle jator batzuen pisuan gastuetarako bote bat dute. Ikasleek dirua behar dutenean,
+//                 botetik hartzen dute; eta dirua irabazi dutenean botean dirua sartzen dute (kontutan
+//                 hartuz, noski, botean zenbat dagoen). Hartu edo sartu egin aurretik (eta begiratu aurretik
+//                 ere), zer egingo duten erabakitzen dute (hartzera edo botatzera).
+//                 Etxeko jabeak, hilean behin, etxeko alokairua (kopuru finko bat) kobratzera joaten da.
+
+//                 Ekintza guztiak agertu behar dira trazan: hartzera, botatzera, begiratu, hartu, bota, askatu...
+
+
+const JA = 2		// Jabeak jarritako alokairuaren prezioa
+const BT = 4 		// Botearen tamaina maximoa
+range BR = 0..BT 	// Botean egon daitekeen diru kopurua
+const IK = 4 		// Ikasle kopurua
+range IKR = 1..IK 	// Ikasle rangoa
+range ERABR = 0..1	// ERABR == 1 denean dirua sartuko du ikasleak, ERABR==0 bada hartu
+range BLOK = 0..1 	// Blokeoa errepresentatzeko
+
+IKASLEA = ( auzas[e:ERABR] -> 
+			if (e==0) then (hartzera ->IKHARTU)
+			else(sartzera->IKSARTU)	
+		  ),
+IKHARTU=(begiratu[p:BR]-> 	
+							if(p>0) then (hartu[h:1..p]->IKASLEA)
+							else(askatu->IKASLEA)
+),
+
+IKSARTU=( begiratu[p:BR]-> 	
+							if(0<BT-p) then (sartu[s:1..BT-p]->IKASLEA)
+							else(askatu->IKASLEA)
+).
+JABEA = ( begiratu[dk:BR] ->
+				if (dk>=JA) then ( hartu[JA] -> JABEA )
+				else (askatu -> JABEA)
+		  ).
+//BOTEA[uneko diru kop][blokeoa]
+BOTEA = BOTEA[0][0],
+BOTEA [i:BR][blok:BLOK] = 	( when (blok==0)			 j.begiratu[i] 		 -> BOTEA[i][1]
+							| when (blok==0) ik[IKR].begiratu[i] -> BOTEA[i][1]
+							| when (i>0 && blok==1)  ik[IKR].hartu[h:1..i]	 -> BOTEA[i-h][0]
+				 			| when (i<BT && blok==1) ik[IKR].sartu[s:1..BT-i] -> BOTEA[i+s][0]
+							| when (i>=JA && blok==1)			 j.hartu[JA] 			 -> BOTEA[i-JA][0]
+							| j.askatu-> BOTEA[i][0]
+							| ik[IKR].askatu  -> BOTEA[i][0]
+				 					).
+
+||JATORRAK = ( ik[IKR]:IKASLEA || j:JABEA || BOTEA ).
+

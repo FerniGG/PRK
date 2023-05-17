@@ -1,0 +1,24 @@
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 19/03/2023                        ///
+//////////////////////////////////////////////////
+
+//   Gai Zenb : 5.2
+//   Ariketa Zenb : 5                         
+//   Ariketa Izena : FIFOIlara  
+//   Enuntziatua : LIFO (Last Input First Output) pila batean sartutako azken prozesua da
+//                 ateratzen lehena. FSPz modelatu eta Java-z inplementatu
+
+const PK=5 //Prozesu kopurua
+range PR=1..PK //Prozesuen indizeak
+const FK=4 //Lifoaren tamaina
+range FR=0..FK-1 //Lifoaren posizioak
+range FKR=0..FK //Lifoan egon daitezkeen prozesu kopurua
+P = ( sartu[x:FR] -> atera[x] -> P).
+//k: LIFOan une honetan dauden prozesu kopurua
+LIFO=LIFO[0],
+LIFO[k:FKR]=(when (k<FK) sartu[k] -> LIFO[k+1]
+ 				| when (k>0) atera[k-1] -> LIFO[k-1]
+).
+||SISTEMA = ( p[PR]:P
+|| p[PR]::LIFO).
