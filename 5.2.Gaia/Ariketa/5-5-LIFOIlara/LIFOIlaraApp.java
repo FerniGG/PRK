@@ -1,4 +1,17 @@
+package G5_5_LIFO;
+
 import java.util.Random;
+
+//////////////////////////////////////////////////
+///   Egilea: Fernando Gonzalez                ///
+///   Data : 24/04/2023                        ///
+//////////////////////////////////////////////////
+
+//Gai Zenb : 5.2
+//Ariketa Zenb : 5                         
+//Ariketa Izena : FIFOIlara  
+//Enuntziatua : LIFO (Last Input First Output) pila batean sartutako azken prozesua da
+//ateratzen lehena. FSPz modelatu eta Java-z inplementatu
 
 public class LIFOIlaraApp {
 	public final static int ProzKop = 10;
@@ -10,13 +23,13 @@ public class LIFOIlaraApp {
 		}
 		p.idatzi("Ilara\n");
 		p.idatzi("=====================================================================================\n");
-		Buffer buf = new Buffer(ProzKop, p);
-		p.idatzi(buf.toString(0));
-		Idazlea idList[] = new Idazlea[ProzKop];
+		Ilara il = new Ilara(ProzKop, p);
+		p.idatzi(il.toString(0));
+		Prozesua idList[] = new Prozesua[ProzKop];
 
 		String space = "";
 		for (int i = 0; i < ProzKop; i++) {
-			idList[i] = new Idazlea(i, buf, p, space);
+			idList[i] = new Prozesua(i, il, p, space);
 			space += "\t";
 		}
 
@@ -24,19 +37,21 @@ public class LIFOIlaraApp {
 			idList[i].start();
 		}
 
-		buf.setSpace(space);
+		il.setSpace(space);
 
 	}
 }
 
-class Buffer {
+//kont: LIFOan une honetan dauden prozesu kopurua
+//prozesu bat sartzen bada, zein posizioan sartu behar den eta ateratzen bada kont-1 posiziotik atera behar da.
+class Ilara {
 	int kont = 0;
 	char[] buf;
 	int tam;
 	Pantaila p;
 	String space;
 
-	public Buffer(int ptam, Pantaila pp) {
+	public Ilara(int ptam, Pantaila pp) {
 		p = pp;
 		tam = ptam;
 		this.buf = new char[tam];
@@ -85,14 +100,14 @@ class Buffer {
 	}
 }
 
-class Idazlea extends Thread {
+class Prozesua extends Thread {
 	int id;
 	int acctiveProccess = -1;
 	String Space;
-	Buffer buf;
+	Ilara buf;
 	Pantaila p;
 
-	Idazlea(int pid, Buffer b, Pantaila pp, String pspace) {
+	Prozesua(int pid, Ilara b, Pantaila pp, String pspace) {
 		buf = b;
 		p = pp;
 		id = pid;
@@ -103,10 +118,11 @@ class Idazlea extends Thread {
 		Random rand = new Random();
 		return rand.nextInt((10 - 1) + 1) + 1;
 	}
-
+//P = ( sartu[x:FR] -> atera[x] -> P).
 	public void run() {
 		try {
 			while (true) {
+				this.itxaron();
 				this.acctiveProccess = buf.sartu(this.id, this.Space);
 				this.itxaron();
 				buf.irten(this.id, this.Space, this.acctiveProccess);
@@ -118,7 +134,7 @@ class Idazlea extends Thread {
 	}
 
 	public void itxaron() throws InterruptedException {
-		sleep(zenbakiaAuzas() * 100);
+		sleep((long) (Math.random() * 1000));
 	}
 }
 
@@ -132,4 +148,5 @@ class Pantaila {
 		System.out.print(s);
 	}
 }
+
 

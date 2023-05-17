@@ -3,7 +3,7 @@ import java.util.Random;
 
 //////////////////////////////////////////////////
 ///   Egilea: Fernando Gonzalez                ///
-///   Data : 24/4/2023                        ///
+///   Data : 19/03/2023                        ///
 //////////////////////////////////////////////////
 
 //Gai Zenb : 5.2
@@ -22,13 +22,13 @@ public class FIFOIlaraApp {
 		}
 		p.idatzi("Ilara\n");
 		p.idatzi("=====================================================================================\n");
-		Buffer buf = new Buffer(ProzKop, p);
-		p.idatzi(buf.toString(0));
-		Idazlea idList[] = new Idazlea[ProzKop];
+		Ilara il = new Ilara(ProzKop, p);
+		p.idatzi(il.toString(0));
+		Prozesua idList[] = new Prozesua[ProzKop];
 
 		String space = "";
 		for (int i = 0; i < ProzKop; i++) {
-			idList[i] = new Idazlea(i, buf, p, space);
+			idList[i] = new Prozesua(i, il, p, space);
 			space += "\t";
 		}
 
@@ -36,14 +36,15 @@ public class FIFOIlaraApp {
 			idList[i].start();
 		}
 
-		buf.setSpace(space);
+		il.setSpace(space);
 
 	}
 }
 //kont: FIFOan une honetan dauden prozesu kopurua
 //in: prozesu bat sartzen bada, zein posizioan sartu behar den
 //out: ateratzea dagokion prozesua, zein posiziotan dagoen
-class Buffer {
+//FIFO=FIFO[0][0][0],
+class Ilara {
 	int kont = 0;
 	char[] buf;
 	int tam;
@@ -51,7 +52,7 @@ class Buffer {
 	Pantaila p;
 	String space;
 
-	public Buffer(int ptam, Pantaila pp) {
+	public Ilara(int ptam, Pantaila pp) {
 		p = pp;
 		tam = ptam;
 		this.buf = new char[tam];
@@ -103,15 +104,15 @@ class Buffer {
 	}
 }
 
-class Idazlea extends Thread {
+class Prozesua extends Thread {
 	int id;
 	int acctiveProccess = -1;
 	String Space;
-	Buffer buf;
+	Ilara il;
 	Pantaila p;
 
-	Idazlea(int pid, Buffer b, Pantaila pp, String pspace) {
-		buf = b;
+	Prozesua(int pid, Ilara b, Pantaila pp, String pspace) {
+		il = b;
 		p = pp;
 		id = pid;
 		Space = pspace;
@@ -121,13 +122,14 @@ class Idazlea extends Thread {
 		Random rand = new Random();
 		return rand.nextInt((10 - 1) + 1) + 1;
 	}
-
+//P = ( sartu[x:FR] -> atera[x] -> P).
 	public void run() {
 		try {
 			while (true) {
-				this.acctiveProccess = buf.sartu(this.id, this.Space);
 				this.itxaron();
-				buf.irten(this.id, this.Space, this.acctiveProccess);
+				this.acctiveProccess = il.sartu(this.id, this.Space);
+				this.itxaron();
+				il.irten(this.id, this.Space, this.acctiveProccess);
 				this.itxaron();
 			}
 		} catch (InterruptedException e) {
